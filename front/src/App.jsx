@@ -32,7 +32,6 @@ const theme = createTheme({
 });
 
 const AppMain = styled('div')({
-  paddingLeft: '20px',
   width: '100%',
 });
 

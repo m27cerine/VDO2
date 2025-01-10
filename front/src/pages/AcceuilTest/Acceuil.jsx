@@ -10,6 +10,9 @@ function Acceuil() {
   const goToDashboard = () => {
     navigate('/dashboard');
   };
+  const goToAcceuil = () => {
+    navigate('/acceuil');
+  };
 
   return (
     <Container maxWidth="md">
@@ -29,6 +32,16 @@ function Acceuil() {
             onClick={goToDashboard}
           >
             Accéder au tableau de bord
+          </Button>
+        </Box>
+        <Box sx={{ marginTop: 4 }}>
+          <Button 
+            variant="contained" 
+            color="primary" 
+            size="large" 
+            onClick={goToAcceuil}
+          >
+            Accéder a l'acceuil (client)
           </Button>
         </Box>
       </Box>

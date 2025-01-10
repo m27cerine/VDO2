@@ -9,6 +9,7 @@ import Authentification from '../pages/Authentification';
 import App from '../pages/Acceuil/Acceuil';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
+import Layout from '../components/Layout';
 
 const RoutesPages = () => {
   return (
@@ -26,6 +27,7 @@ const RoutesPages = () => {
         {/* Routes pour tester */}
         <Route path="Header" element={<Header />} />
         <Route path="Footer" element={<Footer />} />
+        <Route path="Layout" element={<Layout />} />
       </Routes>
     </div>
   );
