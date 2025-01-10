@@ -16,6 +16,29 @@ const ProductCard = ({ name, price, oldPrice, image, timeLeft }) => {
         },
       }}
     >
+      <Box sx={{ position: 'relative' }}>
+        <img
+          src={image}
+          alt={name}
+          style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '8px' }}
+        />
+        {timeLeft && (
+          <Box
+            sx={{
+              position: 'absolute',
+              top: 10,
+              right: 10,
+              backgroundColor: 'red',
+              color: 'white',
+              padding: '4px 8px',
+              borderRadius: '4px',
+              fontSize: '0.75rem',
+            }}
+          >
+            {timeLeft}
+          </Box>
+        )}
+      </Box>
 
       <Typography variant="h6" sx={{ mt: 2, fontWeight: 'medium', color: 'text.primary', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
         {name}
@@ -26,6 +49,11 @@ const ProductCard = ({ name, price, oldPrice, image, timeLeft }) => {
           <Typography variant="body1" sx={{ fontWeight: 'bold', color: 'text.primary' }}>
             {price.toLocaleString()} DA
           </Typography>
+          {oldPrice && (
+            <Typography variant="body2" sx={{ textDecoration: 'line-through', color: 'text.secondary' }}>
+              {oldPrice.toLocaleString()} DA
+            </Typography>
+          )}
         </Box>
       </Box>
 

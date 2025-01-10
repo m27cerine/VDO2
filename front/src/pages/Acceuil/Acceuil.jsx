@@ -31,29 +31,31 @@ const Accueil = () => {
           gap: 8
         }}>
           <Box sx={{ 
-            position: 'relative',  // Make the parent box the positioning context
+            position: 'relative', 
             display: 'flex',
-            backgroundColor: 'white',
             borderRadius: '8px',
             overflow: 'hidden',
-            zIndex: 1 // Ensure the box is above the image
+            zIndex: 1 
           }}>
             <Box sx={{ 
               display: 'flex',
               alignItems: 'center',
               backgroundColor: '#fabd15',
               padding: '10px 20px',
+              marginLeft: '20px',
               gap: 7,
               width: '200px'
             }}>
               <Menu />
               <Typography>Rechercher par:</Typography>
-            </Box>
-            
+            </Box>   
             <Select
               defaultValue=""
               displayEmpty
-              sx={{ minWidth: 200 }}
+              sx={{ 
+                minWidth: 200, 
+                backgroundColor: 'white' 
+              }}
             >
               <MenuItem value="">Toutes les catégories</MenuItem>
             </Select>
@@ -65,11 +67,12 @@ const Accueil = () => {
             component="img"
             src={photo}
             sx={{ 
-              width: '100%',
+              width: '70%',
               height: 'auto',
               borderRadius: '8px',
-              position: 'relative',
-              zIndex: 0 // Ensure the image stays behind the box
+              position: 'absolute',
+              paddingTop: '20px' ,
+              zIndex: 0 
             }}
           />
         </Box>
@@ -83,7 +86,7 @@ const Accueil = () => {
             borderRadius: '8px',
             width: '300px',
             position: 'relative',
-            paddingTop: '40px'  // Ajouté pour laisser de l'espace pour le titre qui déborde
+            paddingTop: '40px' 
           }}>
             <Typography sx={{ 
               backgroundColor: '#fabd15',
@@ -171,12 +174,13 @@ const Accueil = () => {
           {/* Barcode Search */}
           <Box sx={{ 
             backgroundColor: '#fabd15',
-            padding: '20px',
+            padding: '10px', 
             borderRadius: '8px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            gap: 2
+            height: '165px', 
+            gap: 1  
           }}>
             <QrCode sx={{ fontSize: 40 }} />
             <TextField
@@ -199,9 +203,14 @@ const Accueil = () => {
           </Box>
         </Box>
       </Box>
-
+              
+      {/* Category Grid */}
+      <Typography variant="h4">Categories</Typography>
       <CategoryGrid />
-      <PromoSection />
+      
+      {/* Product Grid */}
+      <Typography variant="h4">Meilleur vente</Typography>
+      <ProductGrid />
 
     </Layout>
   );

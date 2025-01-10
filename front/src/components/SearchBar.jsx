@@ -3,7 +3,7 @@ import { Box } from '@mui/system';
 
 const SearchBar = () => {
   return (
-    <Box sx={{ width: '300px' ,height:'54px'}}>
+    <Box sx={{ width: '400px' ,height:'54px'}}>
       <div
         style={{
           display: 'flex',

@@ -1,43 +1,38 @@
 import React from 'react';
+import { Grid } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import CategoryCard from './CategoryCard';
 
 const categories = [
   { 
     id: 1,
-    icon: "🚗",
-    name: "Moteur",
-    image: "/api/placeholder/200/200"
+    icon: "Moteur",
+    name: "Moteur"
   },
   {
     id: 2,
-    icon: "⚡",
-    name: "Energie",
-    image: "/api/placeholder/200/200"
+    icon: "Energie",
+    name: "Energie"
   },
   {
     id: 3,
-    icon: "⚙️",
-    name: "Pièces",
-    image: "/api/placeholder/200/200"
+    icon: "Pièces",
+    name: "Pièces"
   },
   {
     id: 4,
-    icon: "🔧",
-    name: "Mécanique",
-    image: "/api/placeholder/200/200"
+    icon: "Mécanique",
+    name: "Mécanique"
   },
   {
     id: 5,
-    icon: "🚘",
-    name: "Carrosserie",
-    image: "/api/placeholder/200/200"
+    icon: "Carrosserie",
+    name: "Carrosserie"
   },
   {
     id: 6,
-    icon: "💡",
-    name: "Electricité",
-    image: "/api/placeholder/200/200"
+    icon: "Electricité",
+    name: "Electricité"
   }
 ];
 
@@ -49,15 +44,16 @@ const CategoryGrid = () => {
   };
 
   return (
-    <div className="grid grid-cols-3 md:grid-cols-6 gap-4 my-8">
+    <Grid container spacing={3} sx={{ my: 0 }}>
       {categories.map((category) => (
-        <CategoryCard
-          key={category.id}
-          {...category}
-          onClick={() => handleCategoryClick(category.id)}
-        />
+        <Grid item xs={12} sm={6} md={4} lg={2} key={category.id}>
+          <CategoryCard
+            {...category}
+            onClick={() => handleCategoryClick(category.id)}
+          />
+        </Grid>
       ))}
-    </div>
+    </Grid>
   );
 };
 
