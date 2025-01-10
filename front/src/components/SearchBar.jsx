@@ -1,21 +1,33 @@
-// Composant SearchBar
-import SearchIcon from '@mui/icons-material/Search';  // Importation de l'icône de MUI
+import SearchIcon from '@mui/icons-material/Search'; 
+import { Box } from '@mui/system';
 
 const SearchBar = () => {
   return (
-    <div className="relative flex items-center">
-      <div className="flex items-center border rounded-lg p-2">
-        <select className="border-r px-2">
-          <option>Toutes les catégories</option>
-        </select>
+    <Box sx={{ width: '500px' ,height:'50px'}}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          backgroundColor: 'white',
+          borderRadius: '6px',
+          width: '100%',
+          height:'100%',
+          border: '1px solid #ddd',
+        }}
+      >
         <input
           type="text"
           placeholder="Recherche rapide..."
-          className="px-4 outline-none"
+          style={{
+            border: 'none',
+            outline: 'none',
+            flexGrow: 1,
+            marginLeft: '10px',
+          }}
         />
-        <SearchIcon className="w-5 h-5 text-gray-400" /> {/* Utilisation de l'icône Search de MUI */}
+        <SearchIcon sx={{ color: '#999', width: 40, height: 40 }} />
       </div>
-    </div>
+    </Box>
   );
 };
 

@@ -6,8 +6,7 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   flexDirection: 'column',
   padding: '6px', 
  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.08)',
-  transition: 'transform 0.2s ease, box-shadow 0.2s ease',  
-  borderLeft: '3px solid #FFA502',  
+  transition: 'transform 0.2s ease, box-shadow 0.2s ease',   
   '&:hover': {
     transform: 'translateY(-4px)',  
     boxShadow: '0 8px 15px rgba(0, 0, 0, 0.12)',  
@@ -49,7 +48,6 @@ const ThemeSelector = ({ label, value, onChange, children }) => (
   <StyledPaper>
     <SelectLabel variant="body1">{label}</SelectLabel>
     <FormControl fullWidth variant="outlined">
-      <InputLabel>{`${label}`}</InputLabel>
       <StyledSelect value={value} onChange={onChange} label={`Choisir ${label}`}>
         <MenuItem value="">
           <em>Sélectionnez {label}</em>
