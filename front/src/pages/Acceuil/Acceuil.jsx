@@ -1,39 +1,25 @@
-// src/pages/Acceuil/Acceuil.jsx
 import React from 'react';
-import { Button, Container, Typography, Box } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import Layout from '../../components/Layout';
+import CategoryGrid from '../../components/CategoryGrid';
+import PromoSection from '../../components/PromoSection';
+import ProductGrid from '../../components/productGrid';
+import { bestSellerProducts, flashSaleProducts } from '../../data/products';
 
-function Acceuil() {
-  const navigate = useNavigate();
-
-  // Fonction de redirection vers le tableau de bord
-  const goToDashboard = () => {
-    navigate('/dashboard');
-  };
-
+const Accueil = () => {
   return (
-    <Container maxWidth="md">
-      <Box sx={{ textAlign: 'center', marginTop: 4 }}>
-        <Typography variant="h3" gutterBottom>
-          Bienvenue sur notre site de vente de pièces détachées
-        </Typography>
-        <Typography variant="h5" gutterBottom>
-          Trouvez les pièces dont vous avez besoin pour votre véhicule facilement et rapidement !
-        </Typography>
-        
-        <Box sx={{ marginTop: 4 }}>
-          <Button 
-            variant="contained" 
-            color="primary" 
-            size="large" 
-            onClick={goToDashboard}
-          >
-            Accéder au tableau de bord
-          </Button>
-        </Box>
-      </Box>
-    </Container>
+    <Layout>
+      <CategoryGrid />
+      <PromoSection />
+      <ProductGrid 
+        title="Meilleurs ventes"
+        products={bestSellerProducts}
+      />
+      <ProductGrid 
+        title="Nos ventes flashs"
+        products={flashSaleProducts}
+      />
+    </Layout>
   );
-}
+};
 
-export default Acceuil;
+export default Accueil;

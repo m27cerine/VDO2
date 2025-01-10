@@ -1,7 +1,7 @@
 import React, { useState} from 'react';
 import { Box, Grid, Container, Paper, Typography } from '@mui/material';
-import Sidebar from '../../components/Layout/Sidebar';
-import Header from '../../components/Layout/Header';
+import Sidebar from '../../components/LayoutA/Sidebar';
+import Header from '../../components/LayoutA/Header';
 import Graphique from './Graphique';
 import KPICard from './KPICard';
 import { ShoppingCart, People, AttachMoney } from '@mui/icons-material';

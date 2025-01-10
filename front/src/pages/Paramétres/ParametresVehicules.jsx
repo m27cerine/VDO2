@@ -16,8 +16,8 @@ import {
   TableRow,
   Pagination
 } from '@mui/material';
-import Sidebar from '../../components/Layout/Sidebar';
-import Header from '../../components/Layout/Header';
+import Sidebar from '../../components/LayoutA/Sidebar';
+import Header from '../../components/LayoutA/Header';
 import AjoutType from './AjoutType';
 import AjoutMarque from './AjoutMarque';
 import AjoutModele from './AjoutModele';

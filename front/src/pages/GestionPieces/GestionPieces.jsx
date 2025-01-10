@@ -25,8 +25,8 @@ import ModeleSelector from '../../components/Selectors/ModeleSelector';
 import MotorisationSelector from '../../components/Selectors/MotorisationSelector';
 import TypeSelector from '../../components/Selectors/TypeSelector';
 import SousCategorieSelector from '../../components/Selectors/SousCategorieSelector';
-import Sidebar from '../../components/Layout/Sidebar';
-import Header from '../../components/Layout/Header';
+import Sidebar from '../../components/LayoutA/Sidebar';
+import Header from '../../components/LayoutA/Header';
 import AjoutPieces from './AjoutPieces';
 
 const ListePieces = ({ pieces, handleMoreInfo, handleEdit, handleDelete }) => {

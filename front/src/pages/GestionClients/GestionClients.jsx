@@ -6,8 +6,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search';
 
-import Sidebar from '../../components/Layout/Sidebar';
-import Header from '../../components/Layout/Header';
+import Sidebar from '../../components/LayoutA/Sidebar';
+import Header from '../../components/LayoutA/Header';
 import AjoutClients from './AjoutClients';
 
 const ListeClients = ({ clients, handleMoreInfo, handleEdit, handleDelete }) => {
