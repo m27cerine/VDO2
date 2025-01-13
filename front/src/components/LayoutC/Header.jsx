@@ -1,8 +1,10 @@
 import React from 'react';
 import { Box, IconButton, Button } from '@mui/material';
 import { ShoppingCart, Person } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 
-const Header = () => {
+const Header = () => { 
+   const navigate = useNavigate();
   return (
     <header >
       <Box sx={{ 
@@ -11,6 +13,7 @@ const Header = () => {
         width: '100%',
         justifyContent: 'space-between'
       }}>
+
         {/* Logo à gauche */}
         <Box sx={{ flexShrink: 0 }}>
           <img 
@@ -27,6 +30,7 @@ const Header = () => {
           gap: 3,
           marginLeft: 'auto'
         }}>
+
           {/* Navigation buttons */}
           <Box sx={{ 
             backgroundColor: 'black',
@@ -35,7 +39,13 @@ const Header = () => {
             alignItems: 'center',
             padding: '7px 20px'
           }}>
-            <Button variant="text" sx={{ color: 'white' }}>Acceuil</Button>
+             <Button
+                variant="text"
+                sx={{ color: 'white' }}
+                onClick={() => navigate('/acceuil')} // Redirection vers la page Acceuil
+              >
+                Acceuil
+              </Button>
             <Button variant="text" sx={{ color: 'white' }}>Offres Speciales</Button>
             <Button variant="text" sx={{ color: 'white' }}>A Propos</Button>
             <Button variant="text" sx={{ color: 'white' }}>Contact</Button>
@@ -57,13 +67,14 @@ const Header = () => {
             >
               <Person />
             </IconButton>
-            <IconButton 
-              sx={{ 
+            <IconButton
+              onClick={() => navigate('/Panier')} // Redirection vers la page Panier
+              sx={{
                 color: 'white',
                 backgroundColor: 'black',
                 borderRadius: 10,
                 padding: '15px',
-                '&:hover': { backgroundColor: '#333' }
+                '&:hover': { backgroundColor: '#333' },
               }}
             >
               <ShoppingCart />

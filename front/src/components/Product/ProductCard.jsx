@@ -87,8 +87,8 @@ const ProductCard = ({ type = 'regular', product }) => {
   return (
     <Box
       sx={{
-        width: 200, // Largeur fixe
-        height: 300, // Hauteur supérieure à la largeur
+        width: 200, 
+        height: 300, 
         backgroundColor: 'white',
         borderRadius: 1,
         boxShadow: 2,
@@ -167,7 +167,7 @@ const ProductCard = ({ type = 'regular', product }) => {
           color: 'black',
           textTransform: 'none',
           position: 'absolute',
-          bottom: -12, // Débordement du bouton
+          bottom: -12,
           left: '50%',
           transform: 'translateX(-50%)',
           width: '80%',

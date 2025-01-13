@@ -49,7 +49,7 @@ const NewsCard = ({ image, title, description }) => (
           textOverflow: 'ellipsis',
           display: '-webkit-box',
           WebkitBoxOrient: 'vertical',
-          WebkitLineClamp: 3, // Limite le texte à 3 lignes
+          WebkitLineClamp: 3, 
         }}
       >
         {description}

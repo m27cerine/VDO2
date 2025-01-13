@@ -5,11 +5,14 @@ import AccueilTest from "../pages/AcceuilTest/Acceuil";
 import GestionPieces from "../pages/GestionPieces/GestionPieces";
 import GestionClients from "../pages/GestionClients/GestionClients";
 import ParametresVehicules from '../pages/Paramétres/ParametresVehicules';
-import Authentification from '../pages/Authentification';
+import Authentification from '../pages/LoginPage';
 import App from '../pages/Acceuil/Acceuil';
 import Footer from '../components/LayoutC/Footer';
 import Header from '../components/LayoutC/Header';
 import Layout from '../components/LayoutC/Layout';
+import Panier from '../pages/Panier';
+import LoginPage from '../pages/LoginPage';
+import SignUp from '../components/Login/SignUp';
 
 const RoutesPages = () => {
   return (
@@ -21,13 +24,13 @@ const RoutesPages = () => {
         <Route path="/gestion-pieces" element={<GestionPieces />} />
         <Route path="/gestion-clients" element={<GestionClients />} />
         <Route path="/parametres" element={<ParametresVehicules />} />
-        <Route path="/authentification" element={<Authentification />} />
+
         {/* Routes du client */}
         <Route path="Acceuil" element={<App />} />
-        {/* Routes pour tester */}
-        <Route path="Header" element={<Header />} />
-        <Route path="Footer" element={<Footer />} />
-        <Route path="Layout" element={<Layout />} />
+        <Route path="Panier" element={<Panier />} />
+        <Route path="/Login" element={<LoginPage />} />
+        <Route path="/SignUp" element={<SignUp />} />
+
       </Routes>
     </div>
   );

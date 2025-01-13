@@ -7,10 +7,10 @@ import { Menu, QrCode } from '@mui/icons-material';
 import SearchBar from '../../components/LayoutC/SearchBar';
 import photo from '../../static/promoAcceuil.png';
 import photo2 from '../../static/peugeot_208_2023_4x3.webp';
-import PromoCard from '../../components/PromoCard';
+import PromoCard from '../../components/Autres/PromoCard';
 import { Grid } from '@mui/material';
 import photo3 from '../../static/png-clipart-cars-logo-brands-cars-logo-brands.png';
-import NewsGrid from '../../components/NewsGrid';
+import NewsGrid from '../../components/Autres/NewsGrid';
 
 const Accueil = () => {
   const [type, setType] = useState('');

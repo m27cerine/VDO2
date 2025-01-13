@@ -13,6 +13,7 @@ const Footer = () => {
         width: '100%',
         overflowX: 'hidden',
       }}>
+        
         {/* Première section */}
         <Box sx={{ backgroundColor: 'grey.200', py: { xs: 1, sm: 2 }, textAlign: 'center', width: '100%' }}>
           <Box sx={{
