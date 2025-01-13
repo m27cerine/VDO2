@@ -1,19 +1,16 @@
 import React, { useState } from 'react';
 import Layout from '../../components/LayoutC/Layout';
 import CategoryGrid from '../../components/Category/CategoryGrid';
-import PromoSection from '../../components/PromoSection';
 import ProductGrid from '../../components/Product/ProductGrid';
-import { Box, MenuItem, Select, Typography, Button, TextField, InputAdornment } from '@mui/material';
-import { Menu, QrCode, Search, Person, ShoppingCart } from '@mui/icons-material';
+import { Box, MenuItem, Select, Typography, Button, TextField} from '@mui/material';
+import { Menu, QrCode } from '@mui/icons-material';
 import SearchBar from '../../components/LayoutC/SearchBar';
 import photo from '../../static/promoAcceuil.png';
 import photo2 from '../../static/peugeot_208_2023_4x3.webp';
-import { DirectionsCar, BatteryChargingFull, Build, Engineering, DirectionsCarFilled, Bolt } from '@mui/icons-material';
 import PromoCard from '../../components/PromoCard';
 import { Grid } from '@mui/material';
 import photo3 from '../../static/png-clipart-cars-logo-brands-cars-logo-brands.png';
 import NewsGrid from '../../components/NewsGrid';
-
 
 const Accueil = () => {
   const [type, setType] = useState('');
