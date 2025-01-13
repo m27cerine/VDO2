@@ -7,9 +7,9 @@ import GestionClients from "../pages/GestionClients/GestionClients";
 import ParametresVehicules from '../pages/Paramétres/ParametresVehicules';
 import Authentification from '../pages/Authentification';
 import App from '../pages/Acceuil/Acceuil';
-import Footer from '../components/Footer';
-import Header from '../components/Header';
-import Layout from '../components/Layout';
+import Footer from '../components/LayoutC/Footer';
+import Header from '../components/LayoutC/Header';
+import Layout from '../components/LayoutC/Layout';
 
 const RoutesPages = () => {
   return (
