@@ -74,7 +74,7 @@ const Footer = () => {
               <Typography component="a" href="#" color="textSecondary" display="block">À propos</Typography>
               <Typography component="a" href="#" color="textSecondary" display="block">Qui sommes-nous ?</Typography>
               <Typography component="a" href="#" color="textSecondary" display="block">Notre vision</Typography>
-              <Typography component="a" href="#" color="textSecondary" display="block">Nos partenaires</Typography>
+              <Typography component="a" href="/PartenairesListe" color="textSecondary" display="block">Nos partenaires</Typography>
             </Grid>
             <Grid item xs={12} sm={2.5}>
               <Typography variant="h6" gutterBottom>
