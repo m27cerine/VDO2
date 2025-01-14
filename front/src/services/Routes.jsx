@@ -5,14 +5,11 @@ import AccueilTest from "../pages/AcceuilTest/Acceuil";
 import GestionPieces from "../pages/GestionPieces/GestionPieces";
 import GestionClients from "../pages/GestionClients/GestionClients";
 import ParametresVehicules from '../pages/Paramétres/ParametresVehicules';
-import Authentification from '../pages/LoginPage';
 import App from '../pages/Acceuil/Acceuil';
-import Footer from '../components/LayoutC/Footer';
-import Header from '../components/LayoutC/Header';
-import Layout from '../components/LayoutC/Layout';
 import Panier from '../pages/Panier';
 import LoginPage from '../pages/LoginPage';
 import SignUp from '../components/Login/SignUp';
+import PartenairesListe from '../pages/PartenairesListe';
 
 const RoutesPages = () => {
   return (
@@ -30,6 +27,7 @@ const RoutesPages = () => {
         <Route path="Panier" element={<Panier />} />
         <Route path="/Login" element={<LoginPage />} />
         <Route path="/SignUp" element={<SignUp />} />
+        <Route path="/PartenairesListe" element={<PartenairesListe />} />
 
       </Routes>
     </div>
