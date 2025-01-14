@@ -12,6 +12,7 @@ import SignUp from '../components/Login/SignUp';
 import PartenairesListe from '../pages/PartenairesListe';
 import Catalogue from '../pages/Catalogue';
 import Offres from '../pages/Offres';
+import ProduitPage from '../pages/ProduitPage';
 
 const RoutesPages = () => {
   return (
@@ -32,6 +33,7 @@ const RoutesPages = () => {
         <Route path="/PartenairesListe" element={<PartenairesListe />} />
         <Route path="/Catalogue" element={<Catalogue />} />
         <Route path="/Offres" element={<Offres />} />
+        <Route path="/ProduitPage" element = {<ProduitPage />} />
 
       </Routes>
     </div>
