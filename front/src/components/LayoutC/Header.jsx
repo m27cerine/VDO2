@@ -46,7 +46,13 @@ const Header = () => {
               >
                 Acceuil
               </Button>
-            <Button variant="text" sx={{ color: 'white' }}>Offres Speciales</Button>
+              <Button
+                variant="text"
+                sx={{ color: 'white' }}
+                onClick={() => navigate('/Offres')} // Redirection vers la page Acceuil
+              >
+                Offres specialies 
+              </Button>
             <Button variant="text" sx={{ color: 'white' }}>A Propos</Button>
             <Button variant="text" sx={{ color: 'white' }}>Contact</Button>
           </Box>

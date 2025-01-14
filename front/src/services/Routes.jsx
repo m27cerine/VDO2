@@ -10,6 +10,8 @@ import Panier from '../pages/Panier';
 import LoginPage from '../pages/LoginPage';
 import SignUp from '../components/Login/SignUp';
 import PartenairesListe from '../pages/PartenairesListe';
+import Catalogue from '../pages/Catalogue';
+import Offres from '../pages/Offres';
 
 const RoutesPages = () => {
   return (
@@ -28,6 +30,8 @@ const RoutesPages = () => {
         <Route path="/Login" element={<LoginPage />} />
         <Route path="/SignUp" element={<SignUp />} />
         <Route path="/PartenairesListe" element={<PartenairesListe />} />
+        <Route path="/Catalogue" element={<Catalogue />} />
+        <Route path="/Offres" element={<Offres />} />
 
       </Routes>
     </div>

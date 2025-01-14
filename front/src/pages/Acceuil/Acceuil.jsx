@@ -11,6 +11,7 @@ import PromoCard from '../../components/Autres/PromoCard';
 import { Grid } from '@mui/material';
 import photo3 from '../../static/png-clipart-cars-logo-brands-cars-logo-brands.png';
 import NewsGrid from '../../components/Autres/NewsGrid';
+import { Link } from 'react-router-dom';
 
 const Accueil = () => {
   const [type, setType] = useState('');
@@ -253,15 +254,18 @@ const Accueil = () => {
               </Select>
               
               <Button
-                fullWidth
-                sx={{ 
-                  backgroundColor: '#fabd15',
-                  color: 'black',
-                  '&:hover': { backgroundColor: '#e0a911' }
-                }}
-              >
-                RECHERCHER
-              </Button>
+              fullWidth
+              component={Link}
+              to="/Catalogue" 
+              sx={{
+                backgroundColor: '#fabd15',
+                color: 'black',
+                '&:hover': { backgroundColor: '#e0a911' }
+              }}
+            >
+              RECHERCHER
+            </Button>
+
             </Box>
           </Box>
 
