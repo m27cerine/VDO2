@@ -15,6 +15,7 @@
     "@mui/icons-material": "^6.3.1",
     "@mui/material": "^6.3.1",
     "@mui/system": "^6.3.1",
+    "axios": "^1.7.9",
     "chart.js": "^4.4.7",
     "framer-motion": "^11.16.6",
     "lucide-react": "^0.470.0",
