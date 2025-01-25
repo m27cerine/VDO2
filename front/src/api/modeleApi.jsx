@@ -10,6 +10,11 @@ export const getAllModelesFn = async () => {
     return response.data;
 };
 
+export const getModelesByTypeAndMarque = async (idType, idMarque) => {
+    const response = await authApi.get(`Modele/type/${idType}/marque/${idMarque}`);
+    return response.data;
+};
+
 export const createModeleFn = async (formData) => {
     const response = await authApi.post(`Modele/`, formData);
     return response.data;

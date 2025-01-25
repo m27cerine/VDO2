@@ -56,6 +56,27 @@ export const findOne = (req, res) => {
     });
 };
 
+
+export const findByModele = (req, res) => {
+    const { modeleId } = req.params;
+  
+    motorisation.findByModeleId(modeleId, (err, data) => {
+      if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Motorisations not found for modeleId ${modeleId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error retrieving motorisations for modeleId " + modeleId
+          });
+        }
+      } else {
+        res.send(data);
+      }
+    });
+  };
+
 export const update = (req, res) => {
     if (!req.body) {
         res.status(400).send({

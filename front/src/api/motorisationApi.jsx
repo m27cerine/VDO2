@@ -10,6 +10,11 @@ export const getAllMotorisationsFn = async () => {
     return response.data;
 };
 
+export const getMotorisationsByModele = async (modeleId) => {
+    const response = await authApi.get(`Motorisation/modele/${modeleId}`);
+    return response.data;
+  };
+
 export const createMotorisationFn = async (formData) => {
     const response = await authApi.post('motorisation', formData);
     return response.data;

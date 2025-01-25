@@ -3,9 +3,8 @@ import ThemeSelector from './ThemeSelector';
 import { MenuItem } from '@mui/material';
 import { getAllTypesFn } from '../../api/typeApi';
 
-const TypeSelector = () => {
+const TypeSelector = ({ typeId, onTypeChange }) => {
   const [types, setTypes] = useState([]);
-  const [selectedType, setSelectedType] = useState('');
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -23,10 +22,6 @@ const TypeSelector = () => {
     fetchTypes();
   }, []);
 
-  const handleChange = (event) => {
-    setSelectedType(event.target.value);
-  };
-
   if (error) {
     return <div>Erreur: {error}</div>;
   }
@@ -34,19 +29,20 @@ const TypeSelector = () => {
   return (
     <ThemeSelector 
       label="Type de véhicule" 
-      value={selectedType} 
-      onChange={handleChange}
+      value={typeId} 
+      onChange={(e) => onTypeChange(e.target.value)}
     >
       {types.map((type) => (
         <MenuItem 
           key={type.id_type} 
-          value={type.nom_type }
+          value={type.id_type}
         >
-          {type.nom_type }
+          {type.nom_type}
         </MenuItem>
       ))}
     </ThemeSelector>
   );
 };
+
 
 export default TypeSelector;

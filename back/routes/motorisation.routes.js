@@ -1,4 +1,5 @@
 import { create, findAll, findOne, update, deleteById, deleteAll } from "../controllers/motorisation.controller.js";
+import { findByModele } from "../controllers/motorisation.controller.js";
 import { Router } from "express";
 const router = Router();
 
@@ -17,6 +18,13 @@ export default app => {
         findOne(req, res);
       });      
   
+
+      router.get("/modele/:modeleId", (req, res) => {
+        console.log(`GET /api/motorisation/modele/${req.params.modeleId}: Request received`);
+        findByModele(req, res);
+      });
+
+
     // Update an motorisation with id
     router.put("/:id", update);
   

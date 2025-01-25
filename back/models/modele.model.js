@@ -39,8 +39,26 @@ class model {
         });
     }
 
+    static findByTypeAndMarque(id_type, id_marque, result) {
+        const query = `
+            SELECT * FROM modele
+            WHERE id_type = ? AND id_marque = ?
+        `;
+    
+        pool.query(query, [id_type, id_marque], (err, res) => {
+            if (err) {
+                console.error("Error while fetching models by type and marque:", err);
+                result(err, null);
+                return;
+            }
+    
+            console.log("Models fetched by type and marque:", res);
+            result(null, res);
+        });
+    }
+    
     static getAll(nom, result) {
-        let query = "SELECT id_modele, nom_modele FROM modele";
+        let query = "SELECT * FROM modele";
         if (nom) {
           query += ` WHERE nom_modele LIKE '%${nom}%'`;
         }
@@ -62,10 +80,10 @@ class model {
     static updateById(id, model, result) {
         pool.query(
             "UPDATE modele SET \
-            nom_modelee  = ? \
-            WHERE id_modelee = ?",
+            nom_modele  = ? \
+            WHERE id_modele = ?",
             [
-                model.nom_modelee,
+                model.nom_modele,
                 id
             ],
             (err, res) => {
@@ -88,7 +106,7 @@ class model {
     }
 
     static remove(id, result) {
-        pool.query("DELETE FROM model WHERE id_modele = ?", id, (err, res) => {
+        pool.query("DELETE FROM modele WHERE id_modele = ?", id, (err, res) => {
             if (err) {
                 console.log("error: ", err);
                 result(null, err);
@@ -107,7 +125,7 @@ class model {
     }
 
     static removeAll(result) {
-        pool.query("DELETE FROM model", (err, res) => {
+        pool.query("DELETE FROM modele", (err, res) => {
             if (err) {
                 console.log("error: ", err);
                 result(null, err);

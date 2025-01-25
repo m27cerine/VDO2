@@ -17,11 +17,16 @@ import MarqueSelector from '../../components/Selectors/MarqueSelector';
 import ModeleSelector from '../../components/Selectors/ModeleSelector';
 import MotorisationSelector from '../../components/Selectors/MotorisationSelector';
 
+
 const Accueil = () => {
   const [type, setType] = useState('');
   const [marque, setMarque] = useState('');
   const [modele, setModele] = useState('');
   const [motorisation, setMotorisation] = useState('');
+  const [typeId, setTypeId] = useState('');
+  const [marqueId, setMarqueId] = useState('');
+  const [motorisationId, setMotorisationId] = useState('');
+  const [modeleId, setModeleId] = useState('');
   const [codeBar, setCodeBar] = useState('');
 
     const bestSellers = [
@@ -204,10 +209,24 @@ const Accueil = () => {
             </Typography>
 
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                <TypeSelector />
-                <MarqueSelector />
-                <ModeleSelector />
-                <MotorisationSelector />
+                <TypeSelector
+                  typeId={typeId} 
+                  onTypeChange={setTypeId} 
+                />
+                <MarqueSelector 
+                  marqueId={marqueId} 
+                  onMarqueChange={setMarqueId} />
+                <ModeleSelector 
+                  typeId={typeId} 
+                  marqueId={marqueId} 
+                  onModeleChange={setModeleId} 
+                  modeleId={modeleId}
+                />
+                <MotorisationSelector
+                modeleId = {modeleId}
+                onMotorisationChange = {setMotorisationId} 
+                motorisationId = {motorisationId}
+                />
               
               <Button
               fullWidth

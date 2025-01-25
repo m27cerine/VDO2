@@ -56,6 +56,21 @@ export const findOne = (req, res) => {
     });
 };
 
+export const findByTypeAndMarque = (req, res) => {
+    const { id_type, id_marque } = req.params;
+
+    modele.findByTypeAndMarque(id_type, id_marque, (err, data) => {
+        if (err) {
+            console.error("Erreur lors de la récupération des modèles:", err);
+            res.status(500).send({
+                message: "Erreur lors de la récupération des modèles.",
+            });
+        } else {
+            res.send(data);
+        }
+    });
+};
+
 export const update = (req, res) => {
     if (!req.body) {
         res.status(400).send({

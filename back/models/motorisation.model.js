@@ -39,6 +39,27 @@ class motorisation {
         });
     }
 
+
+    static findByModeleId(modeleId, result) {
+        const query = "SELECT * FROM motorisation WHERE id_modele = ?";
+        pool.query(query, [modeleId], (err, res) => {
+          if (err) {
+            console.log("Error: ", err);
+            result(err, null);
+            return;
+          }
+    
+          if (res.length) {
+            console.log("Motorisations found: ", res);
+            result(null, res);
+          } else {
+            // Aucun résultat trouvé
+            result({ kind: "not_found" }, null);
+          }
+        });
+      }
+
+
     static getAll(type, result) {
         let query = "SELECT id_motorisation, type_motorisation, id_modele FROM motorisation";
         if (type) {

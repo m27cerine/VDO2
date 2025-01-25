@@ -3,8 +3,7 @@ import ThemeSelector from './ThemeSelector';
 import { MenuItem } from '@mui/material';
 import { getAllMarquesFn } from '../../api/marqueApi';
 
-const MarqueSelector = () => {
-  const [selectedMarque, setSelectedMarque] = useState('');
+const MarqueSelector = ({ marqueId, onMarqueChange }) => {
   const [marques, setMarques] = useState([]);
   const [error, setError] = useState(null);
 
@@ -23,30 +22,27 @@ const MarqueSelector = () => {
     fetchMarques();
   }, []);
 
-  const handleChange = (event) => {
-    setSelectedMarque(event.target.value);
-  };
-
   if (error) {
     return <div>Erreur: {error}</div>;
   }
 
   return (
     <ThemeSelector 
-      label="Marque de véhicule" 
-      value={selectedMarque} 
-      onChange={handleChange}
+      label="Marque" 
+      value={marqueId} 
+      onChange={(e) => onMarqueChange(e.target.value)}
     >
       {marques.map((marque) => (
         <MenuItem 
-          key={marque.id_marque } 
-          value={marque.nom_marque }
+          key={marque.id_marque} 
+          value={marque.id_marque}
         >
-          {marque.nom_marque }
+          {marque.nom_marque}
         </MenuItem>
       ))}
     </ThemeSelector>
   );
 };
+
 
 export default MarqueSelector;

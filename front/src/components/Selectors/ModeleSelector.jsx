@@ -1,31 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import ThemeSelector from './ThemeSelector'; 
 import { MenuItem } from '@mui/material';
-import { getAllModelesFn } from '../../api/modeleApi';
+import ThemeSelector from './ThemeSelector'; 
+import { getModelesByTypeAndMarque } from '../../api/modeleApi';
 
-const ModeleSelector = () => {
+const ModeleSelector = ({ typeId, marqueId, onModeleChange, modeleId }) => {
   const [modeles, setModeles] = useState([]);
-  const [selectedModele, setSelectedModele] = useState('');
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchModeles = async () => {
-      try {
-        const modelesData = await getAllModelesFn();
-        const modelesArray = Array.isArray(modelesData) ? modelesData : [];
-        setModeles(modelesArray);
-      } catch (error) {
-        console.error('Erreur lors de la récupération des modeles:', error);
-        setError('Impossible de charger les modeles');
+      if (typeId && marqueId) {
+        try {
+          const modelesData = await getModelesByTypeAndMarque(typeId, marqueId);
+          setModeles(modelesData);
+        } catch (error) {
+          console.error('Erreur lors de la récupération des modèles:', error);
+          setError('Impossible de charger les modèles');
+        }
+      } else {
+        setModeles([]); // Réinitialiser si aucun type ou marque n'est sélectionné
       }
     };
 
     fetchModeles();
-  }, []);
-
-  const handleChange = (event) => {
-    setSelectedModele(event.target.value);
-  };
+  }, [typeId, marqueId]);
 
   if (error) {
     return <div>Erreur: {error}</div>;
@@ -33,14 +31,14 @@ const ModeleSelector = () => {
 
   return (
     <ThemeSelector 
-      label="Modèle de véhicule" 
-      value={selectedModele} 
-      onChange={handleChange}
+      label="Modèle" 
+      value={modeleId} 
+      onChange={(e) => onModeleChange(e.target.value)}
     >
       {modeles.map((modele) => (
         <MenuItem 
           key={modele.id_modele} 
-          value={modele.nom_modele}
+          value={modele.id_modele}
         >
           {modele.nom_modele}
         </MenuItem>
