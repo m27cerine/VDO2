@@ -40,9 +40,9 @@ class categorie {
     }
 
     static getAll(nom, result) {
-        let query = "SELECT id_categorie, nomcategorie FROM categorie";
+        let query = "SELECT * FROM categorie";
         if (nom) {
-          query += ` WHERE nomcategorie LIKE '%${nom}%'`;
+          query += ` WHERE nom_categorie LIKE '%${nom}%'`;
         }
       
         console.log(`categorie.model.js: Executing query: ${query}`);
@@ -62,7 +62,7 @@ class categorie {
     static updateById(id, categorie, result) {
         pool.query(
             "UPDATE categorie SET \
-            nomcategorie  = ? \
+            nom_categorie  = ? \
             WHERE id_categorie = ?",
             [
                 categorie.nomcategorie,
