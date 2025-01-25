@@ -16,6 +16,15 @@ app.get("/", (req, res) => {
 import typeRoute from "./routes/type.routes.js";
 typeRoute(app);
 
+import marqueRoute from "./routes/marque.routes.js";
+marqueRoute(app);
+
+import modelRoute from "./routes/modele.routes.js";
+modelRoute(app);
+
+import motorisationRoute from "./routes/motorisation.routes.js";
+motorisationRoute(app);
+
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {

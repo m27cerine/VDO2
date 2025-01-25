@@ -12,6 +12,10 @@ import { Grid } from '@mui/material';
 import photo3 from '../../static/png-clipart-cars-logo-brands-cars-logo-brands.png';
 import NewsGrid from '../../components/Autres/NewsGrid';
 import { Link } from 'react-router-dom';
+import TypeSelector from '../../components/Selectors/TypeSelector';
+import MarqueSelector from '../../components/Selectors/MarqueSelector';
+import ModeleSelector from '../../components/Selectors/ModeleSelector';
+import MotorisationSelector from '../../components/Selectors/MotorisationSelector';
 
 const Accueil = () => {
   const [type, setType] = useState('');
@@ -200,58 +204,10 @@ const Accueil = () => {
             </Typography>
 
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <Select 
-                value={type} 
-                onChange={(e) => setType(e.target.value)} 
-                displayEmpty 
-                fullWidth
-                sx={{ 
-                  backgroundColor: 'white',
-                  borderRadius: '4px',
-                  '& .MuiSelect-select': { backgroundColor: 'white' }
-                }}
-              >
-                <MenuItem value="">Type de véhicule</MenuItem>
-              </Select>
-              <Select 
-                value={marque} 
-                onChange={(e) => setMarque(e.target.value)} 
-                displayEmpty 
-                fullWidth
-                sx={{ 
-                  backgroundColor: 'white',
-                  borderRadius: '4px',
-                  '& .MuiSelect-select': { backgroundColor: 'white' }
-                }}
-              >
-                <MenuItem value="">Marque</MenuItem>
-              </Select>
-              <Select 
-                value={modele} 
-                onChange={(e) => setModele(e.target.value)} 
-                displayEmpty 
-                fullWidth
-                sx={{ 
-                  backgroundColor: 'white',
-                  borderRadius: '4px',
-                  '& .MuiSelect-select': { backgroundColor: 'white' }
-                }}
-              >
-                <MenuItem value="">Modèle</MenuItem>
-              </Select>
-              <Select 
-                value={motorisation} 
-                onChange={(e) => setMotorisation(e.target.value)} 
-                displayEmpty 
-                fullWidth
-                sx={{ 
-                  backgroundColor: 'white',
-                  borderRadius: '4px',
-                  '& .MuiSelect-select': { backgroundColor: 'white' }
-                }}
-              >
-                <MenuItem value="">Motorisation</MenuItem>
-              </Select>
+                <TypeSelector />
+                <MarqueSelector />
+                <ModeleSelector />
+                <MotorisationSelector />
               
               <Button
               fullWidth

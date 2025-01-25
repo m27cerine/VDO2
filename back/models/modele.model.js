@@ -1,27 +1,27 @@
 import pool from "../config/db.js";
 
-class Type {
-    constructor(Type) {
-        this.id_Type = Type.id_Type;
-        this.nomType = Type.nomType;
+class model {
+    constructor(model) {
+        this.id_modele = model.id_modele;
+        this.nom_modele = model.nom_modele;
     }
 
-    static create(newType, result) {
-        pool.query("INSERT INTO Type SET ?", newType, (err, res) => {
+    static create(newmodel, result) {
+        pool.query("INSERT INTO model SET ?", newmodel, (err, res) => {
             if (err) {
                 console.log("error: ", err);
                 result(err, null);
                 return;
             }
 
-            console.log("created Type: ", { id: res.insertId, ...newType });
-            result(null, { id: res.insertId, ...newType });
+            console.log("created model: ", { id: res.insertId, ...newmodel });
+            result(null, { id: res.insertId, ...newmodel });
             console.log('cest Ok !!!');
         });
     }
 
     static findById(id, result) {
-        pool.query(`SELECT * FROM Type WHERE id_type = ${id}`, (err, res) => {
+        pool.query(`SELECT * FROM model WHERE id_modele = ${id}`, (err, res) => {
             if (err) {
                 console.log("error: ", err);
                 result(err, null);
@@ -29,43 +29,43 @@ class Type {
             }
 
             if (res.length) {
-                console.log("found Type: ", res[0]);
+                console.log("found model: ", res[0]);
                 result(null, res[0]);
                 return;
             }
 
-            // not found Type with the id
+            // not found model with the id
             result({ kind: "not_found" }, null);
         });
     }
 
     static getAll(nom, result) {
-        let query = "SELECT id_type, nom_type FROM Type";
+        let query = "SELECT id_modele, nom_modele FROM modele";
         if (nom) {
-          query += ` WHERE nom_type LIKE '%${nom}%'`;
+          query += ` WHERE nom_modele LIKE '%${nom}%'`;
         }
       
-        console.log(`type.model.js: Executing query: ${query}`);
+        console.log(`modele.model.js: Executing query: ${query}`);
         pool.query(query, (err, res) => {
           if (err) {
-            console.error("type.model.js: Error executing query:", err);
+            console.error("modele.model.js: Error executing query:", err);
             result(null, err);
             return;
           }
       
-          console.log("type.model.js: Query result:", res);
+          console.log("modele.model.js: Query result:", res);
           result(null, res);
         });
       }
       
 
-    static updateById(id, Type, result) {
+    static updateById(id, model, result) {
         pool.query(
-            "UPDATE Type SET \
-            nom_type  = ? \
-            WHERE id_type = ?",
+            "UPDATE modele SET \
+            nom_modelee  = ? \
+            WHERE id_modelee = ?",
             [
-                Type.nomType,
+                model.nom_modelee,
                 id
             ],
             (err, res) => {
@@ -76,19 +76,19 @@ class Type {
                 }
 
                 if (res.affectedRows == 0) {
-                    // not found Type with the id
+                    // not found model with the id
                     result({ kind: "not_found" }, null);
                     return;
                 }
 
-                console.log("updated Type: ", { id: id, ...Type });
-                result(null, { id: id, ...Type });
+                console.log("updated model: ", { id: id, ...model });
+                result(null, { id: id, ...model });
             }
         );
     }
 
     static remove(id, result) {
-        pool.query("DELETE FROM Type WHERE id_type = ?", id, (err, res) => {
+        pool.query("DELETE FROM model WHERE id_modele = ?", id, (err, res) => {
             if (err) {
                 console.log("error: ", err);
                 result(null, err);
@@ -96,28 +96,28 @@ class Type {
             }
 
             if (res.affectedRows == 0) {
-                // not found Type with the id
+                // not found model with the id
                 result({ kind: "not_found" }, null);
                 return;
             }
 
-            console.log("deleted Type with id: ", id);
+            console.log("deleted model with id: ", id);
             result(null, res);
         });
     }
 
     static removeAll(result) {
-        pool.query("DELETE FROM Type", (err, res) => {
+        pool.query("DELETE FROM model", (err, res) => {
             if (err) {
                 console.log("error: ", err);
                 result(null, err);
                 return;
             }
 
-            console.log(`deleted ${res.affectedRows} Types`);
+            console.log(`deleted ${res.affectedRows} models`);
             result(null, res);
         });
     }
 }
 
-export default Type;
+export default model;

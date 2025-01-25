@@ -1,30 +1,30 @@
-import { create, findAll, findOne, update, deleteById, deleteAll } from "../controllers/type.controller.js";
+import { create, findAll, findOne, update, deleteById, deleteAll } from "../controllers/modele.controller.js";
 import { Router } from "express";
 const router = Router();
 
 export default app => {  
  
-    // Create a new Type
+    // Create a new model
     router.post("/", create);
   
     router.get("/", (req, res) => {
-        console.log("GET /api/Type: Request received");
+        console.log("GET /api/modele: Request received");
         findAll(req, res);
       });
       
       router.get("/:id", (req, res) => {
-        console.log(`GET /api/Type/${req.params.id}: Request received`);
+        console.log(`GET /api/modele/${req.params.id}: Request received`);
         findOne(req, res);
       });      
   
-    // Update an Type with id
+    // Update an model with id
     router.put("/:id", update);
   
-    // Delete an Type with id
+    // Delete an model with id
     router.delete("/:id", deleteById);
   
-    // Delete all Types
+    // Delete all models
     router.delete("/", deleteAll);
   
-    app.use('/api/type', router);
+    app.use('/api/modele', router);
 };

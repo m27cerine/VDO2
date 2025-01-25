@@ -1,4 +1,4 @@
-import Type from "../models/type.model.js";
+import piece from "../models/piece.model.js";
 
 export const create = (req, res) => {
     if (!req.body) {
@@ -7,49 +7,49 @@ export const create = (req, res) => {
         });
     }
 
-    const Type = new Type({
-        nomType: req.body.nomType
+    const piece = new piece({
+        nompiece: req.body.nompiece
     });
 
-    Type.create(Type, (err, data) => {
+    piece.create(piece, (err, data) => {
         if (err)
             res.status(500).send({
-                message: err.message || "Some error occurred while creating the Type."
+                message: err.message || "Some error occurred while creating the piece."
             });
         else res.send(data);
     });
 };
 
 export const findAll = (req, res) => {
-    console.log("type.controller.js: findAll called");
+    console.log("piece.controller.js: findAll called");
   
-    const nom = req.query.nomType;
-    console.log(`type.controller.js: Query parameter nomType = ${nom}`);
+    const nom = req.query.nompiece;
+    console.log(`piece.controller.js: Query parameter nompiece = ${nom}`);
   
-    Type.getAll(nom, (err, data) => {
+    piece.getAll(nom, (err, data) => {
       if (err) {
-        console.error("type.controller.js: Error retrieving types:", err);
+        console.error("piece.controller.js: Error retrieving pieces:", err);
         res.status(500).send({
-          message: err.message || "Some error occurred while retrieving Types.",
+          message: err.message || "Some error occurred while retrieving pieces.",
         });
       } else {
-        console.log("type.controller.js: Types retrieved successfully:", data);
-        res.json(data); // Use res.json() to ensure proper JSON response
+        console.log("piece.controller.js: pieces retrieved successfully:", data);
+        res.send(data);
       }
     });
-};
-
+  };
+  
 
 export const findOne = (req, res) => {
-    Type.findById(req.params.id, (err, data) => {
+    piece.findById(req.params.id, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({
-                    message: `Not found Type with id ${req.params.id}.`
+                    message: `Not found piece with id ${req.params.id}.`
                 });
             } else {
                 res.status(500).send({
-                    message: "Error retrieving Type with id " + req.params.id
+                    message: "Error retrieving piece with id " + req.params.id
                 });
             }
         } else res.send(data);
@@ -65,18 +65,18 @@ export const update = (req, res) => {
 
     console.log(req.body);
 
-    Type.updateById(
+    piece.updateById(
         req.params.id,
-        new Type(req.body),
+        new piece(req.body),
         (err, data) => {
             if (err) {
                 if (err.kind === "not_found") {
                     res.status(404).send({
-                        message: `Not found Type with id ${req.params.id}.`
+                        message: `Not found piece with id ${req.params.id}.`
                     });
                 } else {
                     res.status(500).send({
-                        message: "Error updating Type with id " + req.params.id
+                        message: "Error updating piece with id " + req.params.id
                     });
                 }
             } else res.send(data);
@@ -85,27 +85,27 @@ export const update = (req, res) => {
 };
 
 export const deleteById = (req, res) => {
-    Type.remove(req.params.id, (err, data) => {
+    piece.remove(req.params.id, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({
-                    message: `Not found Type with id ${req.params.id}.`
+                    message: `Not found piece with id ${req.params.id}.`
                 });
             } else {
                 res.status(500).send({
-                    message: "Could not delete Type with id " + req.params.id
+                    message: "Could not delete piece with id " + req.params.id
                 });
             }
-        } else res.send({ message: `Type was deleted successfully!` });
+        } else res.send({ message: `piece was deleted successfully!` });
     });
 };
 
 export const deleteAll = (req, res) => {
-    Type.removeAll((err, data) => {
+    piece.removeAll((err, data) => {
         if (err)
             res.status(500).send({
-                message: err.message || "Some error occurred while removing all Types."
+                message: err.message || "Some error occurred while removing all pieces."
             });
-        else res.send({ message: `All Types were deleted successfully!` });
+        else res.send({ message: `All pieces were deleted successfully!` });
     });
 };

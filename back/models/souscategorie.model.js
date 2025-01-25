@@ -1,27 +1,27 @@
 import pool from "../config/db.js";
 
-class Type {
-    constructor(Type) {
-        this.id_Type = Type.id_Type;
-        this.nomType = Type.nomType;
+class souscategorie {
+    constructor(souscategorie) {
+        this.id_souscategorie = souscategorie.id_souscategorie;
+        this.nomsouscategorie = souscategorie.nomsouscategorie;
     }
 
-    static create(newType, result) {
-        pool.query("INSERT INTO Type SET ?", newType, (err, res) => {
+    static create(newsouscategorie, result) {
+        pool.query("INSERT INTO souscategorie SET ?", newsouscategorie, (err, res) => {
             if (err) {
                 console.log("error: ", err);
                 result(err, null);
                 return;
             }
 
-            console.log("created Type: ", { id: res.insertId, ...newType });
-            result(null, { id: res.insertId, ...newType });
+            console.log("created souscategorie: ", { id: res.insertId, ...newsouscategorie });
+            result(null, { id: res.insertId, ...newsouscategorie });
             console.log('cest Ok !!!');
         });
     }
 
     static findById(id, result) {
-        pool.query(`SELECT * FROM Type WHERE id_type = ${id}`, (err, res) => {
+        pool.query(`SELECT * FROM souscategorie WHERE id_souscategorie = ${id}`, (err, res) => {
             if (err) {
                 console.log("error: ", err);
                 result(err, null);
@@ -29,43 +29,43 @@ class Type {
             }
 
             if (res.length) {
-                console.log("found Type: ", res[0]);
+                console.log("found souscategorie: ", res[0]);
                 result(null, res[0]);
                 return;
             }
 
-            // not found Type with the id
+            // not found souscategorie with the id
             result({ kind: "not_found" }, null);
         });
     }
 
     static getAll(nom, result) {
-        let query = "SELECT id_type, nom_type FROM Type";
+        let query = "SELECT id_souscategorie, nomsouscategorie FROM souscategorie";
         if (nom) {
-          query += ` WHERE nom_type LIKE '%${nom}%'`;
+          query += ` WHERE nomsouscategorie LIKE '%${nom}%'`;
         }
       
-        console.log(`type.model.js: Executing query: ${query}`);
+        console.log(`souscategorie.model.js: Executing query: ${query}`);
         pool.query(query, (err, res) => {
           if (err) {
-            console.error("type.model.js: Error executing query:", err);
+            console.error("souscategorie.model.js: Error executing query:", err);
             result(null, err);
             return;
           }
       
-          console.log("type.model.js: Query result:", res);
+          console.log("souscategorie.model.js: Query result:", res);
           result(null, res);
         });
       }
       
 
-    static updateById(id, Type, result) {
+    static updateById(id, souscategorie, result) {
         pool.query(
-            "UPDATE Type SET \
-            nom_type  = ? \
-            WHERE id_type = ?",
+            "UPDATE souscategorie SET \
+            nomsouscategorie  = ? \
+            WHERE id_souscategorie = ?",
             [
-                Type.nomType,
+                souscategorie.nomsouscategorie,
                 id
             ],
             (err, res) => {
@@ -76,19 +76,19 @@ class Type {
                 }
 
                 if (res.affectedRows == 0) {
-                    // not found Type with the id
+                    // not found souscategorie with the id
                     result({ kind: "not_found" }, null);
                     return;
                 }
 
-                console.log("updated Type: ", { id: id, ...Type });
-                result(null, { id: id, ...Type });
+                console.log("updated souscategorie: ", { id: id, ...souscategorie });
+                result(null, { id: id, ...souscategorie });
             }
         );
     }
 
     static remove(id, result) {
-        pool.query("DELETE FROM Type WHERE id_type = ?", id, (err, res) => {
+        pool.query("DELETE FROM souscategorie WHERE id_souscategorie = ?", id, (err, res) => {
             if (err) {
                 console.log("error: ", err);
                 result(null, err);
@@ -96,28 +96,28 @@ class Type {
             }
 
             if (res.affectedRows == 0) {
-                // not found Type with the id
+                // not found souscategorie with the id
                 result({ kind: "not_found" }, null);
                 return;
             }
 
-            console.log("deleted Type with id: ", id);
+            console.log("deleted souscategorie with id: ", id);
             result(null, res);
         });
     }
 
     static removeAll(result) {
-        pool.query("DELETE FROM Type", (err, res) => {
+        pool.query("DELETE FROM souscategorie", (err, res) => {
             if (err) {
                 console.log("error: ", err);
                 result(null, err);
                 return;
             }
 
-            console.log(`deleted ${res.affectedRows} Types`);
+            console.log(`deleted ${res.affectedRows} souscategories`);
             result(null, res);
         });
     }
 }
 
-export default Type;
+export default souscategorie;
