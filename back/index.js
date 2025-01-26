@@ -28,6 +28,8 @@ motorisationRoute(app);
 import categorieRoute from "./routes/categorie.routes.js";
 categorieRoute(app);
 
+import pieceRoute from "./routes/piece.routes.js";
+pieceRoute(app);
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {

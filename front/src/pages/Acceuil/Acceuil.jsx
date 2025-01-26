@@ -5,119 +5,80 @@ import ProductGrid from '../../components/Product/ProductGrid';
 import { Box, MenuItem, Select, Typography, Button, TextField} from '@mui/material';
 import { Menu, QrCode } from '@mui/icons-material';
 import SearchBar from '../../components/LayoutC/SearchBar';
-import photo from '../../static/promoAcceuil.png';
-import photo2 from '../../static/peugeot_208_2023_4x3.webp';
 import PromoCard from '../../components/Autres/PromoCard';
 import { Grid } from '@mui/material';
-import photo3 from '../../static/png-clipart-cars-logo-brands-cars-logo-brands.png';
 import NewsGrid from '../../components/Autres/NewsGrid';
 import { Link } from 'react-router-dom';
 import TypeSelector from '../../components/Selectors/TypeSelector';
 import MarqueSelector from '../../components/Selectors/MarqueSelector';
 import ModeleSelector from '../../components/Selectors/ModeleSelector';
 import MotorisationSelector from '../../components/Selectors/MotorisationSelector';
+import CategoryProducts from '../../components/Category/CategoryProduct';
+import BrandLogos from '../../components/Autres/BrandLogo';
+import photo from '../../static/promoAcceuil.png';
 
 
 const Accueil = () => {
-  const [type, setType] = useState('');
-  const [marque, setMarque] = useState('');
-  const [modele, setModele] = useState('');
-  const [motorisation, setMotorisation] = useState('');
   const [typeId, setTypeId] = useState('');
   const [marqueId, setMarqueId] = useState('');
   const [motorisationId, setMotorisationId] = useState('');
   const [modeleId, setModeleId] = useState('');
   const [codeBar, setCodeBar] = useState('');
+  
+  const bestSellers = [
+    {
+      id: 1,
+      name: 'Pneu Michelin 205/55 R16',
+      price: 12000,
+      image: '/api/placeholder/400/400',
+    },
+    {
+      id: 2,
+      name: 'Batterie Bosch 12V 60Ah',
+      price: 15000,
+      image: '/api/placeholder/400/400',
+    },
+    {
+      id: 3,
+      name: 'Amortisseur Monroe Avant',
+      price: 8000,
+      image: '/api/placeholder/400/400',
+    },
+    {
+      id: 4,
+      name: 'Filtre à huile Purflux LS123',
+      price: 1200,
+      image: '/api/placeholder/400/400',
+    },
+  ];
 
-    const bestSellers = [
-      {
-        id: 1,
-        name: "Kit de freinage complet",
-        price: "7'800",
-        image: photo2
-      },
-      {
-        id: 2,
-        name: "Phares arrière Golf GTI",
-        price: "7'800",
-        image: photo2
-      },
-      {
-        id: 3,
-        name: "Turbo essence 4.6L",
-        price: "123'000",
-        image: photo2
-      }
-    ];
-  
-    const flashSales = [
-      {
-        id: 1,
-        name: "Kit clé à cliquet professionnel",
-        price: "1'300",
-        oldPrice: "1'500",
-        image: photo2,
-        timeLeft: "00:34:51"
-      },
-      {
-        id: 2,
-        name: "Batterie 12V Premium",
-        price: "4'100",
-        oldPrice: "4'500",
-        image: photo2,
-        timeLeft: "02:15:44"
-      },
-      {
-        id: 3,
-        name: "Phares avant Opel Astra",
-        price: "54'900",
-        oldPrice: "60'000",
-        image: photo2,
-        timeLeft: "14:08:12"
-      },
-      {
-        id: 4,
-        name: "Radiateur Mercedes Class A",
-        price: "180'000",
-        oldPrice: "200'000",
-        image: photo2,
-        timeLeft: "22:23:21"
-      }
-    ];
-  
-    const categoryProducts = [
-      {
-        id: 1,
-        name: "Kit clé à cliquet professionnel",
-        price: "7'800",
-        image: photo2
-      },
-      {
-        id: 2,
-        name: "Disques de frein sport",
-        price: "123'000",
-        image: photo2
-      },
-      {
-        id: 3,
-        name: "Amortisseurs sport",
-        price: "7'800",
-        image: photo2
-      },
-      {
-        id: 4,
-        name: "Turbo 4.6L Essence",
-        price: "103'000",
-        image: photo2
-      },
-      {
-        id: 5,
-        name: "Ventilateur Mercedes",
-        price: "700",
-        image: photo2
-      }
-    ];
-  
+  const flashSales = [
+    {
+      id: 5,
+      name: 'Kit de distribution Gates',
+      price: 25000,
+      image: '/api/placeholder/400/400',
+    },
+    {
+      id: 6,
+      name: 'Pare-chocs avant Renault Clio 4',
+      price: 10000,
+      image: '/api/placeholder/400/400',
+    },
+    {
+      id: 7,
+      name: 'Jeu de plaquettes de frein Bosch',
+      price: 3500,
+      image: '/api/placeholder/400/400',
+    },
+    {
+      id: 8,
+      name: 'Filtre à air Mann C32006',
+      price: 800,
+      image: '/api/placeholder/400/400',
+    },
+  ];
+
 
   return (
     <Layout>
@@ -328,78 +289,10 @@ const Accueil = () => {
       </Box>
 
       {/* Category Products */}
-      <Box sx={{ my: 4 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-            Produits par catégorie
-          </Typography>
-          <Box sx={{ 
-            display: 'flex', 
-            gap: 1,
-            bgcolor: 'white',
-            borderRadius: 1,
-            p: 0.5
-          }}>
-            <Typography sx={{ 
-              px: 1, 
-              py: 0.5, 
-              borderRadius: 1,
-              cursor: 'pointer',
-              bgcolor: '#fabd15',
-              color: 'black'
-            }}>
-              Mécanique
-            </Typography>
-            <Typography sx={{ 
-              px: 1, 
-              py: 0.5, 
-              borderRadius: 1,
-              cursor: 'pointer',
-              '&:hover': { bgcolor: '#f5f5f5' }
-            }}>
-              Pneumatique
-            </Typography>
-            <Typography sx={{ 
-              px: 1, 
-              py: 0.5, 
-              borderRadius: 1,
-              cursor: 'pointer',
-              '&:hover': { bgcolor: '#f5f5f5' }
-            }}>
-              Accessoires
-            </Typography>
-          </Box>
-        </Box>
-        <ProductGrid products={categoryProducts} />
-      </Box>
+      <CategoryProducts />
 
       {/* Brand Logos */}
-      <Box sx={{ my: 4 }}>
-        <Grid container spacing={2}>
-          {[...Array(10)].map((_, index) => (
-            <Grid item xs={6} sm={4} md={2} lg={1} key={index}>
-              <Box
-                sx={{
-                  bgcolor: 'white',
-                  p: 2,
-                  borderRadius: 1,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  height: 60
-                }}
-              >
-                <Box
-                  component="img"
-                  src={photo3}
-                  alt={`Brand ${index + 1}`}
-                  sx={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
-                />
-              </Box>
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
+      <BrandLogos />
 
       {/* article */}
       <NewsGrid />

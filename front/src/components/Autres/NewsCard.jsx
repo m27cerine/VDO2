@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography, Link } from '@mui/material';
 
-const NewsCard = ({ image, title, description }) => (
+const NewsCard = ({ image, title, description, url }) => (
   <Box
     sx={{
       display: 'flex',
@@ -55,20 +55,19 @@ const NewsCard = ({ image, title, description }) => (
         {description}
       </Typography>
       {/* Lien */}
-      <Link
-        href="#"
-        sx={{
+      <a
+        href={url}  // Lien dynamique vers l'article
+        target="_blank"  // Ouvrir dans un nouvel onglet
+        rel="noopener noreferrer"  // Sécurité supplémentaire
+        style={{
           color: '#fabd15',
           textDecoration: 'none',
           fontWeight: 'bold',
           fontSize: '0.9rem',
-          '&:hover': {
-            textDecoration: 'underline',
-          },
         }}
       >
         Lire l'article
-      </Link>
+      </a>
     </Box>
   </Box>
 );

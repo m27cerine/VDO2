@@ -10,6 +10,17 @@ export const getAllPiecesFn = async () => {
     return response.data;
 };
 
+export const getPiecesBySubCategoryFn = async (idSousCategorie) => {
+    const response = await authApi.get(`Piece?sousCategorie=${idSousCategorie}`);
+    return response.data;
+};
+
+export const getPiecesByCategoryFn = async (idCategorie) => {
+    const response = await authApi.get(`Piece?categorie=${idCategorie}`);
+    return response.data;
+};
+
+
 export const createPieceFn = async (formData) => {
     const response = await authApi.post(`Piece/`, formData);
     return response.data;

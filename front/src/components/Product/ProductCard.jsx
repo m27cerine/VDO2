@@ -2,6 +2,9 @@ import { Box, Button, IconButton, Typography } from '@mui/material';
 import { FavoriteBorder } from '@mui/icons-material';
 
 const ProductCard = ({ type = 'regular', product }) => {
+  // Vérifie si l'image existe, sinon une image par défaut est utilisée
+  const imageUrl = product.image_url || 'https://via.placeholder.com/150'; // Image par défaut
+
   if (type === 'flash') {
     return (
       <Box sx={{ 
@@ -14,8 +17,8 @@ const ProductCard = ({ type = 'regular', product }) => {
         <Box sx={{ width: '60%', position: 'relative' }}>
           <Box
             component="img"
-            src={product.image}
-            alt={product.name}
+            src={imageUrl}
+            alt={product.nom_piece}
             sx={{
               width: '100%',
               height: '100%',
@@ -30,7 +33,7 @@ const ProductCard = ({ type = 'regular', product }) => {
             backgroundColor: 'rgba(255, 255, 255, 0.9)',
             p: 0.5
           }}>
-            <Typography sx={{ fontSize: '0.7rem' }}>{product.name}</Typography>
+            <Typography sx={{ fontSize: '0.7rem' }}>{product.nom_piece}</Typography>
           </Box>
         </Box>
         <Box sx={{ 
@@ -63,7 +66,7 @@ const ProductCard = ({ type = 'regular', product }) => {
               </Typography>
             )}
             <Typography sx={{ color: 'white', fontSize: '0.8rem', fontWeight: 'bold' }}>
-              {product.price} DA
+              {product.prix} DA
             </Typography>
           </Box>
           <Button
@@ -107,8 +110,8 @@ const ProductCard = ({ type = 'regular', product }) => {
       >
         <Box
           component="img"
-          src={product.image}
-          alt={product.name}
+          src={imageUrl}
+          alt={product.nom_piece} // Utilise 'nom_piece' pour le nom du produit
           sx={{
             width: '100%',
             height: '100%',
@@ -147,15 +150,15 @@ const ProductCard = ({ type = 'regular', product }) => {
         <Typography
           sx={{ fontWeight: 'bold', fontSize: '1rem', marginBottom: 0.5 }}
         >
-          {product.name}
+          {product.nom_piece} {/* Nom du produit */}
         </Typography>
         <Typography
           sx={{ color: 'grey.500', fontSize: '0.9rem', textDecoration: 'line-through' }}
         >
-          {product.oldPrice && `${product.oldPrice} DA`}
+          {product.oldPrice && `${product.oldPrice} DA`} {/* Si prix ancien existe */}
         </Typography>
         <Typography sx={{ color: 'black', fontSize: '1.2rem', fontWeight: 'bold' }}>
-          {product.price} DA
+          {product.prix} DA {/* Prix du produit */}
         </Typography>
       </Box>
 
