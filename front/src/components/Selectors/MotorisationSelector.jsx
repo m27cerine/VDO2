@@ -3,23 +3,29 @@ import ThemeSelector from "./ThemeSelector";
 import { MenuItem } from "@mui/material";
 import { getMotorisationsByModele } from "../../api/motorisationApi";
 
-const MotorisationSelector = ({ modeleId, onMotorisationChange, motorisationId }) => {
+const MotorisationSelector = ({ modeleId, motorisationId, setMotorisationId, setMotorisationNom, onMotorisationChange }) => {
   const [motorisations, setMotorisations] = useState([]);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!modeleId) {
-      setMotorisations([]); 
+      setMotorisations([]);
       return;
     }
 
     const fetchMotorisations = async () => {
+      setLoading(true);
       try {
         const motorisationsData = await getMotorisationsByModele(modeleId);
-        setMotorisations(motorisationsData);
+        setMotorisations(Array.isArray(motorisationsData) ? motorisationsData : []);
+        setError(null);
       } catch (error) {
         console.error("Erreur lors de la récupération des motorisations :", error);
         setError("Impossible de charger les motorisations");
+        setMotorisations([]);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -27,16 +33,29 @@ const MotorisationSelector = ({ modeleId, onMotorisationChange, motorisationId }
   }, [modeleId]);
 
   if (error) {
-    return <div>Erreur : {error}</div>;
+    return <div style={{ color: 'red' }}>Erreur : {error}</div>;
   }
 
-return (
+  return (
     <ThemeSelector
       label="Motorisation"
       value={motorisationId}
-      onChange={(e) => onMotorisationChange(e.target.value)}
+      onChange={(e) => {
+        const selectedMotorisation = motorisations.find(m => m.id_motorisation === e.target.value);
+        const id = selectedMotorisation?.id_motorisation || '';
+        const nom = selectedMotorisation?.type_motorisation || '';
+
+        setMotorisationId(id);
+        setMotorisationNom(nom);
+
+        if (onMotorisationChange) {
+          onMotorisationChange({ id, nom });
+        }
+      }}
     >
-      {motorisations.length > 0 ? (
+      {loading ? (
+        <MenuItem disabled>Chargement...</MenuItem>
+      ) : motorisations.length > 0 ? (
         motorisations.map((motorisation) => (
           <MenuItem key={motorisation.id_motorisation} value={motorisation.id_motorisation}>
             {motorisation.type_motorisation}
@@ -47,7 +66,6 @@ return (
       )}
     </ThemeSelector>
   );
-
 };
 
 export default MotorisationSelector;

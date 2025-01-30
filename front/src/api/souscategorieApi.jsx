@@ -5,10 +5,16 @@ export const getSouscategorieFn = async (idSouscategorie) => {
     return response.data;
 };
 
+
 export const getAllSouscategoriesFn = async () => {
     const response = await authApi.get(`Souscategorie`);
     return response.data;
 };
+
+export const getSousCategorieByCategorie = async (categorieId) => {
+    const response = await authApi.get(`SousCategorie/categorie/${categorieId}`);
+    return response.data;
+  };
 
 export const createSouscategorieFn = async (formData) => {
     const response = await authApi.post(`Souscategorie/`, formData);

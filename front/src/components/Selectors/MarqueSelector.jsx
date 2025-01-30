@@ -3,7 +3,7 @@ import ThemeSelector from './ThemeSelector';
 import { MenuItem } from '@mui/material';
 import { getAllMarquesFn } from '../../api/marqueApi';
 
-const MarqueSelector = ({ marqueId, onMarqueChange }) => {
+const MarqueSelector = ({ marqueId, setMarqueId, setMarqueNom, onMarqueChange }) => {
   const [marques, setMarques] = useState([]);
   const [error, setError] = useState(null);
 
@@ -11,8 +11,7 @@ const MarqueSelector = ({ marqueId, onMarqueChange }) => {
     const fetchMarques = async () => {
       try {
         const marquesData = await getAllMarquesFn();
-        const marquesArray = Array.isArray(marquesData) ? marquesData : [];
-        setMarques(marquesArray);
+        setMarques(Array.isArray(marquesData) ? marquesData : []);
       } catch (error) {
         console.error('Erreur lors de la récupération des marques:', error);
         setError('Impossible de charger les marques');
@@ -23,26 +22,33 @@ const MarqueSelector = ({ marqueId, onMarqueChange }) => {
   }, []);
 
   if (error) {
-    return <div>Erreur: {error}</div>;
+    return <div style={{ color: 'red' }}>Erreur: {error}</div>;
   }
 
   return (
     <ThemeSelector 
-      label="Marque" 
+      label="Marque du véhicule" 
       value={marqueId} 
-      onChange={(e) => onMarqueChange(e.target.value)}
+      onChange={(e) => {
+        const selectedMarque = marques.find(m => m.id_marque === e.target.value);
+        const id = selectedMarque?.id_marque || '';
+        const nom = selectedMarque?.nom_marque || '';
+
+        setMarqueId(id);
+        setMarqueNom(nom);
+
+        if (onMarqueChange) {
+          onMarqueChange({ id, nom });
+        }
+      }}
     >
       {marques.map((marque) => (
-        <MenuItem 
-          key={marque.id_marque} 
-          value={marque.id_marque}
-        >
+        <MenuItem key={marque.id_marque} value={marque.id_marque}>
           {marque.nom_marque}
         </MenuItem>
       ))}
     </ThemeSelector>
   );
 };
-
 
 export default MarqueSelector;

@@ -69,14 +69,18 @@ INSERT INTO `caracteristique` (`id_caracteristique`, `nom_caracteristique`) VALU
 CREATE TABLE IF NOT EXISTS `categorie` (
   `id_categorie` int(11) NOT NULL AUTO_INCREMENT,
   `nom_categorie` varchar(50) NOT NULL,
+  `icone` varchar(100) NOT NULL DEFAULT '',
   PRIMARY KEY (`id_categorie`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
--- Listage des données de la table piecedetache.categorie : ~3 rows (environ)
-INSERT INTO `categorie` (`id_categorie`, `nom_categorie`) VALUES
-	(1, 'Moteur'),
-	(2, 'Transmission'),
-	(3, 'Freins');
+-- Listage des données de la table piecedetache.categorie : ~6 rows (environ)
+INSERT INTO `categorie` (`id_categorie`, `nom_categorie`, `icone`) VALUES
+	(1, 'Moteur', 'DirectionsCar'),
+	(2, 'Transmission', 'BatteryChargingFull'),
+	(3, 'Freins', 'Build'),
+	(4, 'Suspension', 'Engineering'),
+	(5, 'Energie', 'Bolt'),
+	(6, 'Échappement', 'DirectionsCarFilled');
 
 -- Listage de la structure de la table piecedetache. client
 CREATE TABLE IF NOT EXISTS `client` (
@@ -125,14 +129,15 @@ INSERT INTO `entreprise` (`id_entreprise`, `secteur_activite`) VALUES
 CREATE TABLE IF NOT EXISTS `marque` (
   `id_marque` int(11) NOT NULL AUTO_INCREMENT,
   `nom_marque` varchar(50) NOT NULL,
+  `logo_marque` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id_marque`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- Listage des données de la table piecedetache.marque : ~3 rows (environ)
-INSERT INTO `marque` (`id_marque`, `nom_marque`) VALUES
-	(1, 'Toyota'),
-	(2, 'Renault'),
-	(3, 'Ford');
+INSERT INTO `marque` (`id_marque`, `nom_marque`, `logo_marque`) VALUES
+	(1, 'Toyota', 'https://cdn.worldvectorlogo.com/logos/toyota-7.svg'),
+	(2, 'Renault', 'https://www.exemple.com/logos/renault.png'),
+	(3, 'Ford', 'https://www.exemple.com/logos/ford.png');
 
 -- Listage de la structure de la table piecedetache. modele
 CREATE TABLE IF NOT EXISTS `modele` (
@@ -193,16 +198,17 @@ CREATE TABLE IF NOT EXISTS `piece` (
   `prix` decimal(10,2) NOT NULL,
   `quantite_stock` int(11) NOT NULL,
   `id_sous_categorie` int(11) NOT NULL,
+  `image_url` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`id_piece`),
   KEY `id_sous_categorie` (`id_sous_categorie`),
   CONSTRAINT `piece_ibfk_1` FOREIGN KEY (`id_sous_categorie`) REFERENCES `sous_categorie` (`id_sous_categorie`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- Listage des données de la table piecedetache.piece : ~3 rows (environ)
-INSERT INTO `piece` (`id_piece`, `nom_piece`, `description`, `prix`, `quantite_stock`, `id_sous_categorie`) VALUES
-	(1, 'Courroie de distribution renforcée', 'Convient pour les moteurs de type Essence', 150.50, 10, 1),
-	(2, 'Kit d’embrayage', 'Compatible avec les véhicules utilitaires', 300.00, 5, 2),
-	(3, 'Plaquettes de frein haute performance', 'Optimisé pour SUV', 75.20, 20, 3);
+INSERT INTO `piece` (`id_piece`, `nom_piece`, `description`, `prix`, `quantite_stock`, `id_sous_categorie`, `image_url`) VALUES
+	(1, 'Courroie de distribution renforcée', 'Convient pour les moteurs de type Essence', 150.50, 10, 1, 'https://hp-performances.com/14186-large_default/courroie-de-distribution-toda-racing-renforcee-b-series-b18c-b16b.jpg'),
+	(2, 'Kit d’embrayage', 'Compatible avec les véhicules utilitaires', 300.00, 5, 2, 'https://www.eurorepar.com/uploads/ligne_produit/3557/100-6d8a070fd4f11a31b2559baa31156d84.png'),
+	(3, 'Plaquettes de frein haute performance', 'Optimisé pour SUV', 75.20, 20, 3, 'https://image.made-in-china.com/202f0j00lAvkImHBPsbC/Manufacturer-High-Quality-High-Performance-Brake-System-Car-Brake-Pad.webp');
 
 -- Listage de la structure de la table piecedetache. piece_caracteristique
 CREATE TABLE IF NOT EXISTS `piece_caracteristique` (

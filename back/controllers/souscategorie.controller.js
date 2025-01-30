@@ -84,6 +84,26 @@ export const update = (req, res) => {
     );
 };
 
+export const findByCategorie = (req, res) => {
+    const { categorieId } = req.params;
+  
+    souscategorie.findByCategorieId(categorieId, (err, data) => {
+      if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Motorisations not found for categorieId ${categorieId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error retrieving motorisations for categorieId " + categorieId
+          });
+        }
+      } else {
+        res.send(data);
+      }
+    });
+  };
+
 export const deleteById = (req, res) => {
     souscategorie.remove(req.params.id, (err, data) => {
         if (err) {

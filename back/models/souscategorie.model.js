@@ -118,6 +118,25 @@ class souscategorie {
             result(null, res);
         });
     }
+
+    static findByCategorieId(categorieId, result) {
+        const query = "SELECT * FROM sous_categorie WHERE id_categorie = ?";
+        pool.query(query, [categorieId], (err, res) => {
+          if (err) {
+            console.log("Error: ", err);
+            result(err, null);
+            return;
+          }
+    
+          if (res.length) {
+            console.log("Sous categories found: ", res);
+            result(null, res);
+          } else {
+            // Aucun résultat trouvé
+            result({ kind: "not_found" }, null);
+          }
+        });
+      }
 }
 
 export default souscategorie;
