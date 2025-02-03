@@ -34,6 +34,9 @@ pieceRoute(app);
 import souscategorieRoute from "./routes/souscategorie.route.js"
 souscategorieRoute(app);
 
+import client from "./routes/client.route.js"
+client(app);
+
 const PORT = process.env.PORT
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);

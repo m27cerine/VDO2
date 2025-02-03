@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import bcrypt from "bcryptjs";
 import {
   Box,
   Button,
@@ -7,12 +8,17 @@ import {
   Stack,
   InputAdornment,
   IconButton,
+  Alert,  // Ajout du composant Alert
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { StyledTextField } from "./StyledComponents";
 import { createClientFn } from "../../api/clientApi";
+import { useUserContext } from "../../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const ClientForm = () => {
+  const { loginUser } = useUserContext();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     nom: "",
     prenom: "",
@@ -23,9 +29,10 @@ const ClientForm = () => {
     confirmPassword: "",
     acceptTerms: false,
   });
-
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState(""); // Nouveau state pour le message d'erreur global
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -33,16 +40,31 @@ const ClientForm = () => {
       ...formData,
       [name]: type === "checkbox" ? checked : value,
     });
+    // Effacer les erreurs quand l'utilisateur commence à taper
+    if (errors[name]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
+    // Effacer le message d'erreur global
+    setErrorMessage("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    
+    // Réinitialiser les messages
+    setErrorMessage("");
+    setSuccessMessage("");
+    
     let validationErrors = {};
     if (!formData.nom) validationErrors.nom = "Le nom est requis.";
     if (!formData.prenom) validationErrors.prenom = "Le prénom est requis.";
     if (!formData.username) validationErrors.username = "Le nom d'utilisateur est requis.";
     if (!formData.email.includes("@")) validationErrors.email = "Email invalide.";
+    if (!formData.telephone) validationErrors.telephone = "Le téléphone est requis.";
     if (formData.password.length < 6) validationErrors.password = "Le mot de passe doit contenir au moins 6 caractères.";
     if (formData.password !== formData.confirmPassword)
       validationErrors.confirmPassword = "Les mots de passe ne correspondent pas.";
@@ -55,36 +77,47 @@ const ClientForm = () => {
     }
 
     try {
-      await createClientFn({
-        nom: formData.nom,
-        prenom: formData.prenom, // Ensure backend accepts prenom
-        username: formData.username, // Add this if necessary
-        email: formData.email,
-        password: formData.password,
-        telephone: formData.telephone,
-      });
-      alert("Compte créé avec succès !");
-      setFormData({
-        nom: "",
-        prenom: "",
-        username: "",
-        email: "",
-        telephone: "",
-        password: "",
-        confirmPassword: "",
-        acceptTerms: false,
-      });
-      setErrors({});
+      const hashedPassword = await bcrypt.hash(formData.password, 10);
+      const clientData = await createClientFn({ ...formData, password: hashedPassword });
+      
+      loginUser(clientData);
+      setSuccessMessage("Compte créé avec succès !");
+      
+      setTimeout(() => {
+        navigate("/acceuil");
+      }, 1000);
+      
     } catch (error) {
-      console.error("Erreur lors de l'inscription :", error);
-      alert("Une erreur est survenue.");
+      console.error("Erreur lors de la création du client :", error);
+      
+      if (error.response?.status === 409) {
+        setErrors(prev => ({
+          ...prev,
+          username: "Ce nom d'utilisateur est déjà utilisé"
+        }));
+        setErrorMessage("Ce nom d'utilisateur est déjà utilisé. Veuillez en choisir un autre.");
+      } else {
+        setErrorMessage("Une erreur est survenue lors de la création du compte. Veuillez réessayer plus tard.");
+      }
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <Stack spacing={2}>
-        {/* Nom et Prénom */}
+        {/* Affichage des messages d'erreur et de succès */}
+        {errorMessage && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {errorMessage}
+          </Alert>
+        )}
+        {successMessage && (
+          <Alert severity="success" sx={{ mb: 2 }}>
+            {successMessage}
+          </Alert>
+        )}
+
+        {/* Le reste de votre formulaire reste identique */}
         <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2 }}>
           <StyledTextField
             required
@@ -140,6 +173,8 @@ const ClientForm = () => {
           name="telephone"
           value={formData.telephone}
           onChange={handleChange}
+          error={!!errors.telephone}
+          helperText={errors.telephone}
           fullWidth
         />
 
@@ -225,6 +260,13 @@ const ClientForm = () => {
           </Button>
         </Box>
       </Stack>
+
+      {/* Affichage du message de succès */}
+      {successMessage && (
+        <Box sx={{ mt: 2, color: "green" }}>
+          <p>{successMessage}</p>
+        </Box>
+      )}
     </form>
   );
 };
