@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Grid, Box, Typography } from '@mui/material';
-import { useNavigate, useParams } from 'react-router-dom';
 import CategoryCard from './CategoryCard';
-import { getSousCategorieByCategorie } from '../../api/souscategorieApi';
 import { 
   DirectionsCar, 
   BatteryChargingFull, 
@@ -20,42 +18,7 @@ const iconMap = {
   DirectionsCarFilled: <DirectionsCarFilled sx={{ fontSize: 40 }} />,
   Bolt: <Bolt sx={{ fontSize: 40 }} />
 };
-
-const SousCategorieGrid = () => {
-  const [sousCategories, setSousCategories] = useState([]);
-  const [error, setError] = useState(null);
-  const navigate = useNavigate();
-  const { categoryId } = useParams();
-
-  useEffect(() => {
-    const fetchSousCategories = async () => {
-      try {
-        const sousCategoriesData = await getSousCategorieByCategorie(categoryId);
-        setSousCategories(sousCategoriesData);
-      } catch (error) {
-        console.error("Erreur lors de la récupération des sous-catégories :", error);
-        setError("Impossible de charger les sous-catégories");
-      }
-    };
-
-    if (categoryId) {
-      fetchSousCategories();
-    }
-  }, [categoryId]);
-
-  const handleSousCategorieClick = (sousCategorieId) => {
-    navigate(`/pieces`, {
-      state: {
-        categoryId,
-        sousCategorieId
-      }
-    });
-  };
-
-  if (error) {
-    return <div>Erreur : {error}</div>;
-  }
-
+const SousCategorieGrid = ({ sousCategories, onSousCategorieClick, vehicleInfo }) => {
   return (
     <Box sx={{ my: 4 }}>
       <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>
@@ -69,7 +32,7 @@ const SousCategorieGrid = () => {
             sm={4} 
             md={2} 
             key={sousCategorie.id_sous_categorie}
-            onClick={() => handleSousCategorieClick(sousCategorie.id_sous_categorie)}
+            onClick={() => onSousCategorieClick(sousCategorie.id_sous_categorie, vehicleInfo)}
           >
             <CategoryCard 
               icon={iconMap[sousCategorie.icone] || <Build sx={{ fontSize: 40 }} />} 

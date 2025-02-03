@@ -80,6 +80,22 @@ export const findBySubCategory = (req, res) => {
     });
 };
 
+export const findBySubCategoryAndMotorisation = (req, res) => {
+    const idSousCategorie = req.query.sousCategorie;
+    const idMotorisation = req.query.motorisation;
+
+    piece.findBySubCategoryAndMotorisation(idSousCategorie, idMotorisation, (err, data) => {
+        if (err) {
+            console.error("Erreur lors de la récupération des pièces par sous-catégorie et motorisation :", err);
+            res.status(500).send({
+                message: err.message || "Erreur lors de la récupération des pièces par sous-catégorie et motorisation."
+            });
+        } else {
+            res.send(data);
+        }
+    });
+};
+
 // Récupérer une pièce par ID
 export const findOne = (req, res) => {
     piece.findById(req.params.id, (err, data) => {

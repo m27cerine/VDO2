@@ -14,6 +14,7 @@ import Catalogue from '../pages/Catalogue/CatalogueCategorie';
 import Offres from '../pages/Offres';
 import ProduitPage from '../pages/ProduitPage';
 import SousCategorie from '../pages/Catalogue/CatalogueSousCategorie';
+import ProduitCatalogue from '../pages/Catalogue/ProduitCatalogue';
 
 const RoutesPages = () => {
   return (
@@ -36,6 +37,7 @@ const RoutesPages = () => {
         <Route path="/souscategorie/categorie/:categoryId" element={<SousCategorie />} />
         <Route path="/Offres" element={<Offres />} />
         <Route path="/ProduitPage" element = {<ProduitPage />} />
+        <Route path="/catalogue/pieces/:sousCategorieId" element={<ProduitCatalogue />} />
 
       </Routes>
     </div>

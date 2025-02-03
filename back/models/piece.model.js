@@ -97,6 +97,26 @@ class piece {
         });
     }
 
+    static findBySubCategoryAndMotorisation(idSousCategorie, idMotorisation, result) {
+        const query = `
+            SELECT p.* 
+            FROM piece p
+            JOIN piece_motorisation pm ON p.id_piece = pm.id_piece
+            WHERE p.id_sous_categorie = ? AND pm.id_motorisation = ?
+        `;
+
+        pool.query(query, [idSousCategorie, idMotorisation], (err, res) => {
+            if (err) {
+                console.log("error: ", err);
+                result(err, null);
+                return;
+            }
+
+            console.log(`Pieces found for sub-category ${idSousCategorie} and motorisation ${idMotorisation}: `, res);
+            result(null, res);
+        });
+    }
+
     static updateById(id, piece, result) {
         pool.query(
             "UPDATE piece SET nom_piece = ?, description = ?, prix = ?, quantite_stock = ?, id_sous_categorie = ? WHERE id_piece = ?",

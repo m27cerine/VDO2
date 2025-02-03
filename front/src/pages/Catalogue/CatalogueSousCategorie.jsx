@@ -4,7 +4,7 @@ import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import Layout from '../../components/LayoutC/Layout';
 import SousCategorieGrid from '../../components/Category/SousCategoryGrid';
-import photo from '../static/png-clipart-cars-logo-brands-cars-logo-brands.png';
+import photo from '../../static/png-clipart-cars-logo-brands-cars-logo-brands.png';
 import { getSousCategorieByCategorie } from '../../api/souscategorieApi';
 
 const SousCategorie = () => {
@@ -33,14 +33,14 @@ const SousCategorie = () => {
   }, [categoryId]);
 
   const handleSousCategorieClick = (sousCategorieId) => {
-    navigate(`/pieces`, {
-      state: {
-        ...vehicleInfo,
-        categoryId,
-        sousCategorieId
-      }
-    });
+  navigate(`/catalogue/pieces/${sousCategorieId}`, {
+  state: {
+    ...vehicleInfo,
+    idMotorisation: vehicleInfo.idMotorisation 
+  }
+});
   };
+  
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -113,10 +113,11 @@ const SousCategorie = () => {
           />
 
           <Box sx={{ my: 4 }}>
-            <SousCategorieGrid 
-              sousCategories={filteredSousCategories} 
-              onSousCategorieClick={handleSousCategorieClick} 
-            />
+          <SousCategorieGrid 
+            sousCategories={filteredSousCategories} 
+            onSousCategorieClick={handleSousCategorieClick} 
+            vehicleInfo={vehicleInfo} 
+          />
           </Box>
         </Box>
       </Box>
