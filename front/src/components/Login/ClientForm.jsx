@@ -8,7 +8,7 @@ import {
   Stack,
   InputAdornment,
   IconButton,
-  Alert,  // Ajout du composant Alert
+  Alert, 
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { StyledTextField } from "./StyledComponents";
@@ -32,7 +32,7 @@ const ClientForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState(""); // Nouveau state pour le message d'erreur global
+  const [errorMessage, setErrorMessage] = useState(""); 
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;

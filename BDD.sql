@@ -1816,7 +1816,7 @@ CREATE TABLE IF NOT EXISTS `professionnel` (
   `email` varchar(255) NOT NULL,
   `telephone` varchar(20) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `accept_terms` tinyint(1) NOT NULL DEFAULT '0',
+  `accept_terms` tinyint(1) DEFAULT '0',
   `metier` varchar(255) NOT NULL,
   `registre_commerce` varchar(255) DEFAULT NULL,
   `identification_fiscale` varchar(255) DEFAULT NULL,
@@ -1829,11 +1829,13 @@ CREATE TABLE IF NOT EXISTS `professionnel` (
   UNIQUE KEY `email` (`email`),
   KEY `idCommune` (`idCommune`),
   CONSTRAINT `professionnel_ibfk_1` FOREIGN KEY (`idCommune`) REFERENCES `commune` (`idCommune`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
--- Listage des données de la table piecedetache.professionnel : ~0 rows (environ)
+-- Listage des données de la table piecedetache.professionnel : ~3 rows (environ)
 INSERT INTO `professionnel` (`id_professionnel`, `nom`, `prenom`, `username`, `email`, `telephone`, `password`, `accept_terms`, `metier`, `registre_commerce`, `identification_fiscale`, `article_imposition`, `adresse`, `inscrit_annuaire`, `idCommune`) VALUES
-	(1, 'Dupont', 'Jean', 'jdupont', 'jean.dupont@example.com', '0612345678', 'hashed_password', 1, 'Médecin', 'RC123456', 'IF789012', 'Article A', '12 Rue des roses', 1, 1);
+	(1, 'Dupont', 'Jean', 'jdupont', 'jean.dupont@example.com', '0612345678', 'hashed_password', 1, 'Médecin', 'RC123456', 'IF789012', 'Article A', '12 Rue des roses', 1, 1),
+	(2, 'Cerine', 'CHELABI', 'cerine0003', 'chelabimaroua@gmail.com', '0666161697', '$2a$10$owQGB1/3Ov1HgHvVgrCUMe1LvpmSGkCwLxiNKzdLope6Gg.3FJiqS', NULL, 'metier1', '1234', '123', '1234', 'AZER', 0, 1),
+	(4, 'Cerine', 'CHELABI', 'cerine00034', 'chelabimarouaa@gmail.com', '0666161697', '$2a$10$dz5P.gKBIhS2gEep4NEwfOcYhbN/7960ka2N0aK4WllIVqNtGfCXm', NULL, 'metier1', '1234', '123', '1234', 'AZERTY', 0, 4);
 
 -- Listage de la structure de la table piecedetache. professionnel_horaire
 CREATE TABLE IF NOT EXISTS `professionnel_horaire` (
