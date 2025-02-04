@@ -15,6 +15,12 @@ export const getPiecesBySubCategoryFn = async (idSousCategorie) => {
     return response.data;
 };
 
+export const getPiecesBySybCategoryAndMotorisationFn = async (idSousCategorie, idMotorisation) => {
+    const response = await authApi.get(`Piece?sousCategorie=${idSousCategorie}&motorisation=${idMotorisation}`);
+    return response.data;
+};
+
+
 export const getPiecesByCategoryFn = async (idCategorie) => {
     const response = await authApi.get(`Piece?categorie=${idCategorie}`);
     return response.data;

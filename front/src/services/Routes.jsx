@@ -14,10 +14,13 @@ import Catalogue from '../pages/Catalogue/CatalogueCategorie';
 import Offres from '../pages/Offres';
 import ProduitPage from '../pages/ProduitPage';
 import SousCategorie from '../pages/Catalogue/CatalogueSousCategorie';
+import ProduitCatalogue from '../pages/Catalogue/ProduitCatalogue';
+import { UserProvider } from "../context/UserContext";
 
 const RoutesPages = () => {
   return (
     <div className="page">
+    <UserProvider>
       <Routes>
         {/* Routes de l'admin */}
         <Route path="/" element={<AccueilTest />} />
@@ -36,8 +39,10 @@ const RoutesPages = () => {
         <Route path="/souscategorie/categorie/:categoryId" element={<SousCategorie />} />
         <Route path="/Offres" element={<Offres />} />
         <Route path="/ProduitPage" element = {<ProduitPage />} />
+        <Route path="/catalogue/pieces/:sousCategorieId" element={<ProduitCatalogue />} />
 
       </Routes>
+    </UserProvider>
     </div>
   );
 }
