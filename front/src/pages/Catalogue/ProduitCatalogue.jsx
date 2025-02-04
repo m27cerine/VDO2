@@ -13,13 +13,15 @@ import {
   Toolbar
 } from '@mui/material';
 import Layout from '../../components/LayoutC/Layout';
-import { getPiecesBySybCategoryAndMotorisationFn } from '../../api/pieceApi';
+import { getPiecesBySybCategoryAndMotorisationFn, getPiecesBySubCategoryFn } from '../../api/pieceApi';
 import { getAllTypesFn } from '../../api/typeApi';
 import { getAllMarquesFn } from '../../api/marqueApi';
 import { getModelesByTypeAndMarque } from '../../api/modeleApi';
 import { getMotorisationsByModele } from '../../api/motorisationApi';
 import photo from '../../static/png-clipart-cars-logo-brands-cars-logo-brands.png';
 import SidebarFilters from '../../components/Autres/SidebarFilters';
+import ProductGrid from '../../components/Product/ProductGrid';
+import ProductCard from '../../components/Product/ProductCard';
 
 const ListeProduitSousCategorie = () => {
   const location = useLocation();
@@ -37,7 +39,7 @@ const ListeProduitSousCategorie = () => {
   const [selectedModele, setSelectedModele] = useState(vehicleInfo.idModele || null);
   const [selectedMotorisation, setSelectedMotorisation] = useState(vehicleInfo.idMotorisation || null);
 
-  const sousCategorieId = vehicleInfo.sousCategorieId;
+  const sousCategorieId = location.state?.sousCategorieId || null;
 
   // Fetch initial des données
   useEffect(() => {
@@ -62,6 +64,12 @@ const ListeProduitSousCategorie = () => {
           const motorisationsData = await getMotorisationsByModele(vehicleInfo.idModele);
           setMotorisations(motorisationsData);
         }
+
+        if (sousCategorieId) {
+          const productsData = await getPiecesBySubCategoryFn(sousCategorieId);
+          setProducts(productsData);
+        }
+        
 
       } catch (error) {
         console.error("Erreur lors du chargement initial des données:", error);
@@ -89,8 +97,12 @@ const ListeProduitSousCategorie = () => {
     setSelectedMotorisation(null);
   };
 
-  const handleMotorisationSelect = (motorisationId) => {
+  const handleMotorisationSelect = async (motorisationId) => {
     setSelectedMotorisation(motorisationId);
+    if (sousCategorieId) {
+      const productsData = await getPiecesBySybCategoryAndMotorisationFn(sousCategorieId,motorisationId);
+      setProducts(productsData);
+    }
   };
 
   // Mise à jour des données lorsque les sélections changent
@@ -169,13 +181,17 @@ const ListeProduitSousCategorie = () => {
               onMarqueSelect={handleMarqueSelect}
               onModeleSelect={handleModeleSelect}
               onMotorisationSelect={handleMotorisationSelect}
+              
             />
           </Grid>
 
           {/* Liste des produits */}
-          <Grid item xs={9}>
-            {/* Contenu des produits */}
-          </Grid>
+          {products.map((product) => (
+          
+            <ProductCard 
+              product={product} 
+            />
+        ))}
         </Grid>
       </Box>
     </Layout>

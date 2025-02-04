@@ -33,13 +33,15 @@ const SousCategorie = () => {
   }, [categoryId]);
 
   const handleSousCategorieClick = (sousCategorieId) => {
-  navigate(`/catalogue/pieces/${sousCategorieId}`, {
-  state: {
-    ...vehicleInfo,
-    idMotorisation: vehicleInfo.idMotorisation 
-  }
-});
+    navigate(`/catalogue/pieces/${sousCategorieId}`, {
+      state: {
+        ...vehicleInfo,
+        sousCategorieId: sousCategorieId, // Assurez-vous qu'il est bien inclus
+        idMotorisation: vehicleInfo.idMotorisation
+      }
+    });
   };
+  
   
 
   const handleSearchChange = (event) => {
