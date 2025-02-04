@@ -46,6 +46,9 @@ wilaya(app);
 import commune from "./routes/commune.routes.js"
 commune(app);
 
+import vendeur from "./routes/vendeur.routes.js"
+vendeur(app);
+
 const PORT = process.env.PORT
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);
