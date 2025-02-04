@@ -4,7 +4,7 @@ import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import Layout from '../../components/LayoutC/Layout';
 import SousCategorieGrid from '../../components/Category/SousCategoryGrid';
-import photo from '../static/png-clipart-cars-logo-brands-cars-logo-brands.png';
+import photo from '../../static/png-clipart-cars-logo-brands-cars-logo-brands.png';
 import { getSousCategorieByCategorie } from '../../api/souscategorieApi';
 
 const SousCategorie = () => {
