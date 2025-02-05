@@ -15,6 +15,7 @@ import Offres from '../pages/Offres';
 import ProduitPage from '../pages/ProduitPage';
 import SousCategorie from '../pages/Catalogue/CatalogueSousCategorie';
 import ProduitCatalogue from '../pages/Catalogue/ProduitCatalogue';
+import ProduitDetails from '../pages/Catalogue/ProduitDetails';
 import { UserProvider } from "../context/UserContext";
 
 const RoutesPages = () => {
@@ -40,6 +41,8 @@ const RoutesPages = () => {
         <Route path="/Offres" element={<Offres />} />
         <Route path="/ProduitPage" element = {<ProduitPage />} />
         <Route path="/catalogue/pieces/:sousCategorieId" element={<ProduitCatalogue />} />
+        <Route path="/catalogue/details/:products" element={<ProduitDetails />} />
+
 
       </Routes>
     </UserProvider>

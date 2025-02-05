@@ -13,7 +13,7 @@ import {
   Toolbar
 } from '@mui/material';
 import Layout from '../../components/LayoutC/Layout';
-import { getPiecesBySybCategoryAndMotorisationFn, getPiecesBySubCategoryFn } from '../../api/pieceApi';
+import { getPiecesBySybCategoryAndMotorisationFn, getPiecesBySubCategoryFn, getPieceFn } from '../../api/pieceApi';
 import { getAllTypesFn } from '../../api/typeApi';
 import { getAllMarquesFn } from '../../api/marqueApi';
 import { getModelesByTypeAndMarque } from '../../api/modeleApi';
@@ -23,7 +23,7 @@ import SidebarFilters from '../../components/Autres/SidebarFilters';
 import ProductGrid from '../../components/Product/ProductGrid';
 import ProductCard from '../../components/Product/ProductCard';
 
-const ListeProduitSousCategorie = () => {
+const ProductDetails = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const vehicleInfo = location.state || {};
@@ -39,7 +39,7 @@ const ListeProduitSousCategorie = () => {
   const [selectedModele, setSelectedModele] = useState(vehicleInfo.idModele || null);
   const [selectedMotorisation, setSelectedMotorisation] = useState(vehicleInfo.idMotorisation || null);
 
-  const sousCategorieId = location.state?.sousCategorieId || null;
+  const productId = location.state?.productId || null;
 
   // Fetch initial des données
   useEffect(() => {
@@ -65,8 +65,8 @@ const ListeProduitSousCategorie = () => {
           setMotorisations(motorisationsData);
         }
 
-        if (sousCategorieId) {
-          const productsData = await getPiecesBySubCategoryFn(sousCategorieId);
+        if (productId) {
+          const productsData = await getPieceFn(productId);
           setProducts(productsData);
         }
         
@@ -105,11 +105,11 @@ const ListeProduitSousCategorie = () => {
     }
   };
 
-  const handlePieceClick = async (productId)=>{
-    navigate(`/catalogue/details/${productId}`, {
+  const handlePieceClick = async (products)=>{
+    navigate(`/catalogue/details/${products}`, {
       state: {
         ...vehicleInfo,
-        productId: productId, // Assurez-vous qu'il est bien inclus
+        products: products, // Assurez-vous qu'il est bien inclus
         idMotorisation: vehicleInfo.idMotorisation
       }
     });
@@ -147,66 +147,20 @@ const ListeProduitSousCategorie = () => {
   return (
     <Layout>
       <Box sx={{ bgcolor: 'white', minHeight: '100vh' }}>
-        <AppBar position="static" color="white" elevation={0}>
-          <Toolbar sx={{ justifyContent: 'space-between' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Box
-                component="img"
-                src={photo}
-                alt="Car logo"
-                sx={{
-                  height: 50,
-                  width: 'auto',
-                  marginRight: 2,
-                }}
-              />
-              <Typography variant="caption" color="textSecondary">
-                {vehicleInfo.nomType} {vehicleInfo.nomMarque} {vehicleInfo.nomModele} {vehicleInfo.nomMotorisation}
-              </Typography>
-            </Box>
-            <Box>
-              <Button onClick={() => navigate('/Acceuil')} variant="contained" color="warning" sx={{ mr: 1, bgcolor: "#fabd15" }}>
-                Changer mon véhicule
-              </Button>
-              <Button variant="contained" color="error">
-                Supprimer
-              </Button>
-            </Box>
-          </Toolbar>
-        </AppBar>
-
         <Grid container spacing={2} sx={{ p: 2 }}>
           {/* Sidebar */}
-          <Grid item xs={3}>
-            <SidebarFilters
-              types={types}
-              marques={marques}
-              modeles={modeles}
-              motorisations={motorisations}
-              selectedType={selectedType}
-              selectedMarque={selectedMarque}
-              selectedModele={selectedModele}
-              selectedMotorisation={selectedMotorisation}
-              onTypeSelect={handleTypeSelect}
-              onMarqueSelect={handleMarqueSelect}
-              onModeleSelect={handleModeleSelect}
-              onMotorisationSelect={handleMotorisationSelect}
-              
-            />
-          </Grid>
 
           {/* Liste des produits */}
-          {products.map((product) => (
+        
           
             <ProductCard 
-              product={product} 
-              onClick= {handlePieceClick}
+            type='details'
+              product={products} 
             />
-        ))}
         </Grid>
       </Box>
     </Layout>
   );
 };
 
-export default ListeProduitSousCategorie;
+export default ProductDetails;

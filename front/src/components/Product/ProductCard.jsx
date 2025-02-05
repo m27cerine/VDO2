@@ -1,7 +1,9 @@
 import { Box, Button, IconButton, Typography } from '@mui/material';
 import { FavoriteBorder } from '@mui/icons-material';
+import { getPieceFn } from '../../api/pieceApi';
+import StarIcon from '@mui/icons-material/Star';
 
-const ProductCard = ({ type = 'regular', product }) => {
+const ProductCard = ({ type = 'regular', product, onClick }) => {
   // Vérifie si l'image existe, sinon une image par défaut est utilisée
   const imageUrl = product.image_url || 'https://via.placeholder.com/150'; // Image par défaut
 
@@ -13,7 +15,8 @@ const ProductCard = ({ type = 'regular', product }) => {
         height: '180px',
         borderRadius: 1,
         overflow: 'hidden'
-      }}>
+      }}
+      onClick={() => onClick(product.id_piece)} >
         <Box sx={{ width: '60%', position: 'relative' }}>
           <Box
             component="img"
@@ -85,7 +88,108 @@ const ProductCard = ({ type = 'regular', product }) => {
         </Box>
       </Box>
     );
-  }
+  } else if (type === 'details'){
+    return (
+      <Box
+      sx={{
+        width: '100vw',
+        display: 'flex',
+        gap: 4,
+        p: 6,
+        alignItems: 'center',
+      }}
+    >
+      {/* Image à gauche */}
+      <Box sx={{ flex: '1', maxWidth: '40vw' }}>
+        <Box
+          component="img"
+          src={product.image_url || 'https://via.placeholder.com/500'}
+          alt={product.nom_piece}
+          sx={{
+            width: '100%',
+            height: 'auto',
+            borderRadius: 2,
+            boxShadow: 3,
+          }}
+        />
+      </Box>
+
+      {/* Détails du produit à droite */}
+      <Box sx={{ flex: '2', display: 'flex', flexDirection: 'column', maxWidth: '50vw' }}>
+        <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
+          {product.nom_piece}
+        </Typography>
+
+        {/* Note et avis */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          {[...Array(4)].map((_, i) => (
+            <StarIcon key={i} sx={{ color: '#FABD15', fontSize: '2rem' }} />
+          ))}
+          <Typography variant="h6">(67 avis)</Typography>
+        </Box>
+
+        {/* Référence et marque */}
+        <Typography variant="h6" sx={{ color: 'gray', mt: 1 }}>
+          Référence : {product.id_piece} | Marque : <strong>Toshiba</strong>
+        </Typography>
+
+        {/* Prix */}
+        <Typography variant="h4" sx={{ fontWeight: 'bold', mt: 2 }}>
+          {product.prix} DA
+        </Typography>
+
+        {/* Disponibilité */}
+        <Typography
+          sx={{
+            color: product.quantite_stock > 0 ? 'green' : 'red',
+            fontWeight: 'bold',
+            fontSize: '1.2rem',
+          }}
+        >
+          {product.quantite_stock > 0 ? 'En stock' : 'Non disponible'}
+        </Typography>
+
+        {/* Description */}
+        <Typography variant="h6" sx={{ mt: 2 }}>
+          {product.description || "Aucune description disponible."}
+        </Typography>
+
+        {/* Bouton commander */}
+        <Button
+          variant="contained"
+          sx={{
+            backgroundColor: '#FF3B30',
+            color: 'white',
+            mt: 3,
+            width: '250px',
+            fontSize: '1.2rem',
+            fontWeight: 'bold',
+            p: 1.5,
+            '&:hover': { backgroundColor: '#E62E25' },
+          }}
+        >
+          Faire une commande
+        </Button>
+
+        {/* Actions */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mt: 3 }}>
+          <IconButton>
+            <FavoriteBorder sx={{ fontSize: '2rem' }} />
+          </IconButton>
+          <Typography variant="h6">Ajouter aux favoris</Typography>
+        </Box>
+
+        {/* Catégorie & Tags */}
+        <Typography variant="h6" sx={{ mt: 3 }}>
+          <strong>Catégorie :</strong> Pièce moteur
+        </Typography>
+        <Typography variant="h6">
+          <strong>Tags :</strong> Pièce, Moteur, Mécanique
+        </Typography>
+      </Box>
+    </Box>
+    );
+}
 
   return (
     <Box
@@ -100,7 +204,7 @@ const ProductCard = ({ type = 'regular', product }) => {
         display: 'flex',
         flexDirection: 'column',
       }}
-    >
+      onClick={() => onClick(product.id_piece)} >
       {/* Partie Image */}
       <Box
         sx={{
