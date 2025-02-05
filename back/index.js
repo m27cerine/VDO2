@@ -34,8 +34,20 @@ pieceRoute(app);
 import souscategorieRoute from "./routes/souscategorie.route.js"
 souscategorieRoute(app);
 
-import client from "./routes/client.route.js"
+import client from "./routes/client.routes.js"
 client(app);
+
+import professionnel from "./routes/professionnel.routes.js"
+professionnel(app);
+
+import wilaya from "./routes/wilaya.routes.js"
+wilaya(app);
+
+import commune from "./routes/commune.routes.js"
+commune(app);
+
+import vendeur from "./routes/vendeur.routes.js"
+vendeur(app);
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {

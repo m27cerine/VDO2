@@ -1816,7 +1816,7 @@ CREATE TABLE IF NOT EXISTS `professionnel` (
   `email` varchar(255) NOT NULL,
   `telephone` varchar(20) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `accept_terms` tinyint(1) NOT NULL DEFAULT '0',
+  `accept_terms` tinyint(1) DEFAULT '0',
   `metier` varchar(255) NOT NULL,
   `registre_commerce` varchar(255) DEFAULT NULL,
   `identification_fiscale` varchar(255) DEFAULT NULL,
@@ -1829,11 +1829,16 @@ CREATE TABLE IF NOT EXISTS `professionnel` (
   UNIQUE KEY `email` (`email`),
   KEY `idCommune` (`idCommune`),
   CONSTRAINT `professionnel_ibfk_1` FOREIGN KEY (`idCommune`) REFERENCES `commune` (`idCommune`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
--- Listage des données de la table piecedetache.professionnel : ~0 rows (environ)
+-- Listage des données de la table piecedetache.professionnel : ~6 rows (environ)
 INSERT INTO `professionnel` (`id_professionnel`, `nom`, `prenom`, `username`, `email`, `telephone`, `password`, `accept_terms`, `metier`, `registre_commerce`, `identification_fiscale`, `article_imposition`, `adresse`, `inscrit_annuaire`, `idCommune`) VALUES
-	(1, 'Dupont', 'Jean', 'jdupont', 'jean.dupont@example.com', '0612345678', 'hashed_password', 1, 'Médecin', 'RC123456', 'IF789012', 'Article A', '12 Rue des roses', 1, 1);
+	(1, 'Dupont', 'Jean', 'jdupont', 'jean.dupont@example.com', '0612345678', 'hashed_password', 1, 'Médecin', 'RC123456', 'IF789012', 'Article A', '12 Rue des roses', 1, 1),
+	(2, 'Cerine', 'CHELABI', 'cerine0003', 'chelabimaroua@gmail.com', '0666161697', '$2a$10$owQGB1/3Ov1HgHvVgrCUMe1LvpmSGkCwLxiNKzdLope6Gg.3FJiqS', NULL, 'metier1', '1234', '123', '1234', 'AZER', 0, 1),
+	(4, 'Cerine', 'CHELABI', 'cerine00034', 'chelabimarouaa@gmail.com', '0666161697', '$2a$10$dz5P.gKBIhS2gEep4NEwfOcYhbN/7960ka2N0aK4WllIVqNtGfCXm', NULL, 'metier1', '1234', '123', '1234', 'AZERTY', 0, 4),
+	(6, 'Cerine', 'CHELABI', 'cerine2222', 'chelabimar@gmail.com', '0666161697', '$2a$10$ZMIYNGrCWeCiK9DD3lRPM.I4nlSj5MBquUfxzn/L8ofNKFRYx8q/2', NULL, 'metier1', '1234', '123', '1234', 'AZERTYUI', 0, 268),
+	(7, 'Cerine', 'CHELABI', 'cerine003', 'chelabimarouappp@gmail.com', '0666161697', '$2a$10$eFFRmw2HEbtVLCqOZuNEleNtjX0lly2cCdhoTS0TcYRcwlorOkJHC', NULL, 'metier1', '1234', '123', '1234', 'AZERTYU', 0, 501),
+	(8, 'Cerine', 'CHELABI', 'cerine003AZ', 'chelabimarouao@gmail.com', '0666161697', '$2a$10$cddvO5zJ0zE7bJeUsXq2cutux.k7FBmJlj6iziSt78cHjsGcBe6pS', NULL, 'metier1', '1234', '123', '1234', 'ZERTYU', 0, 501);
 
 -- Listage de la structure de la table piecedetache. professionnel_horaire
 CREATE TABLE IF NOT EXISTS `professionnel_horaire` (
@@ -1848,28 +1853,6 @@ CREATE TABLE IF NOT EXISTS `professionnel_horaire` (
 -- Listage des données de la table piecedetache.professionnel_horaire : ~1 rows (environ)
 INSERT INTO `professionnel_horaire` (`id_professionnel`, `id_horaire`) VALUES
 	(1, 1);
-
--- Listage de la structure de la table piecedetache. revendeur
-CREATE TABLE IF NOT EXISTS `revendeur` (
-  `id_revendeur` int(11) NOT NULL,
-  `type` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`id_revendeur`),
-  CONSTRAINT `revendeur_ibfk_1` FOREIGN KEY (`id_revendeur`) REFERENCES `acheteur` (`id_acheteur`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- Listage des données de la table piecedetache.revendeur : ~0 rows (environ)
-
--- Listage de la structure de la table piecedetache. revendeur_piece
-CREATE TABLE IF NOT EXISTS `revendeur_piece` (
-  `id_revendeur` int(11) NOT NULL,
-  `id_piece` int(11) NOT NULL,
-  PRIMARY KEY (`id_revendeur`,`id_piece`),
-  KEY `id_piece` (`id_piece`),
-  CONSTRAINT `revendeur_piece_ibfk_1` FOREIGN KEY (`id_revendeur`) REFERENCES `revendeur` (`id_revendeur`),
-  CONSTRAINT `revendeur_piece_ibfk_2` FOREIGN KEY (`id_piece`) REFERENCES `piece` (`id_piece`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- Listage des données de la table piecedetache.revendeur_piece : ~0 rows (environ)
 
 -- Listage de la structure de la table piecedetache. sous_categorie
 CREATE TABLE IF NOT EXISTS `sous_categorie` (
@@ -1900,6 +1883,59 @@ INSERT INTO `type` (`id_type`, `nom_type`) VALUES
 	(1, 'Berline'),
 	(2, 'SUV'),
 	(3, 'Utilitaire');
+
+-- Listage de la structure de la table piecedetache. vendeur
+CREATE TABLE IF NOT EXISTS `vendeur` (
+  `id_vendeur` int(11) NOT NULL AUTO_INCREMENT,
+  `nom` varchar(255) NOT NULL,
+  `prenom` varchar(255) NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `telephone` varchar(20) DEFAULT NULL,
+  `fax` varchar(20) DEFAULT NULL,
+  `password` varchar(255) NOT NULL,
+  `type` varchar(50) NOT NULL,
+  `specialite` varchar(100) DEFAULT NULL,
+  `registre_commerce` varchar(50) DEFAULT NULL,
+  `nif` varchar(50) DEFAULT NULL,
+  `article_imposition` varchar(50) DEFAULT NULL,
+  `idcommune` int(11) NOT NULL,
+  `adresse` text,
+  `accepte_termes` char(50) DEFAULT 'true',
+  PRIMARY KEY (`id_vendeur`),
+  UNIQUE KEY `username` (`username`),
+  UNIQUE KEY `email` (`email`),
+  KEY `idcommune` (`idcommune`),
+  CONSTRAINT `vendeur_ibfk_1` FOREIGN KEY (`idcommune`) REFERENCES `commune` (`idCommune`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+-- Listage des données de la table piecedetache.vendeur : ~0 rows (environ)
+INSERT INTO `vendeur` (`id_vendeur`, `nom`, `prenom`, `username`, `email`, `telephone`, `fax`, `password`, `type`, `specialite`, `registre_commerce`, `nif`, `article_imposition`, `idcommune`, `adresse`, `accepte_termes`) VALUES
+	(1, 'Test', 'Test', 'root', 'test@gmail.com', '0666161697', '+213 555161224', 'Tt123456', 'metier2', 'specialité1', NULL, '1234', NULL, 92, 'AZERTY', NULL);
+
+-- Listage de la structure de la table piecedetache. vendeur_horaire
+CREATE TABLE IF NOT EXISTS `vendeur_horaire` (
+  `id_vendeur` int(11) NOT NULL,
+  `id_horaire` int(11) NOT NULL,
+  PRIMARY KEY (`id_vendeur`,`id_horaire`),
+  KEY `id_horaire` (`id_horaire`),
+  CONSTRAINT `vendeur_horaire_ibfk_1` FOREIGN KEY (`id_vendeur`) REFERENCES `vendeur` (`id_vendeur`) ON DELETE CASCADE,
+  CONSTRAINT `vendeur_horaire_ibfk_2` FOREIGN KEY (`id_horaire`) REFERENCES `horaire` (`id_horaire`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Listage des données de la table piecedetache.vendeur_horaire : ~0 rows (environ)
+
+-- Listage de la structure de la table piecedetache. vendeur_piece
+CREATE TABLE IF NOT EXISTS `vendeur_piece` (
+  `id_vendeur` int(11) NOT NULL,
+  `id_piece` int(11) NOT NULL,
+  PRIMARY KEY (`id_vendeur`,`id_piece`),
+  KEY `id_piece` (`id_piece`),
+  CONSTRAINT `vendeur_piece_ibfk_1` FOREIGN KEY (`id_vendeur`) REFERENCES `vendeur` (`id_vendeur`),
+  CONSTRAINT `vendeur_piece_ibfk_2` FOREIGN KEY (`id_piece`) REFERENCES `piece` (`id_piece`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Listage des données de la table piecedetache.vendeur_piece : ~0 rows (environ)
 
 -- Listage de la structure de la table piecedetache. wilaya
 CREATE TABLE IF NOT EXISTS `wilaya` (
