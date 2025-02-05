@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Grid, IconButton, Typography } from '@mui/material';
 import { ArrowBackIosNew, ArrowForwardIos } from '@mui/icons-material';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ProductCard from './ProductCard';
 import { getAllPiecesFn } from '../../api/pieceApi';  
 
 const ProductGrid = ({ title, type }) => {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
+  const location = useLocation();
+    const navigate = useNavigate();
 
   // Récupérer les produits depuis l'API
   useEffect(() => {
@@ -23,6 +26,13 @@ const ProductGrid = ({ title, type }) => {
 
     fetchProducts();
   }, []);  
+  const handlePieceClick = async (productId)=>{
+    navigate(`/catalogue/details/${productId}`, {
+      state: {
+        productId: productId, // Assurez-vous qu'il est bien inclus
+      }
+    });
+  };
 
   if (error) {
     return <div>{error}</div>;
@@ -59,14 +69,8 @@ const ProductGrid = ({ title, type }) => {
           >
             <ProductCard 
               type={type} 
-              product={{
-                id: product.id_piece, 
-                nom_piece: product.nom_piece, 
-                image_url: product.image_url, 
-                oldPrice: product.oldPrice, 
-                prix: product.prix, 
-                timeLeft: '5h 30m', 
-              }} 
+              product={product} 
+              onClick={handlePieceClick}
             />
           </Grid>
         ))}
