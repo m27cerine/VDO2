@@ -5,6 +5,11 @@ export const getVendeurFn = async (idVendeur) => {
     return response.data;
 };
 
+export const getVendeurByEmailFn = async (email, password) => {
+    const response = await authApi.post('vendeur/login', { email, password });
+    return response.data;
+  };
+
 export const getAllVendeursFn = async () => {
     const response = await authApi.get(`Vendeur`);
     return response.data;
@@ -15,6 +20,7 @@ export const createVendeurFn = async (formData) => {
     console.log("donnee recu au niveau de lapi:", formData);
     return response.data;
 };
+
 
 export const updateVendeurFn = async ({ idVendeur, ...formData }) => {
     const response = await authApi.put(`Vendeur/${idVendeur}/`, formData);

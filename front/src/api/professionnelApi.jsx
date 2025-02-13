@@ -5,6 +5,12 @@ export const getProfessionnelFn = async (idProfessionnel) => {
     return response.data;
 };
 
+export const getProfessionnelByEmailFn = async (email, password) => {
+    const response = await authApi.post('professionnel/login', { email, password });
+    return response.data;
+  };
+
+
 export const getAllProfessionnelsFn = async () => {
     const response = await authApi.get(`Professionnel`);
     return response.data;

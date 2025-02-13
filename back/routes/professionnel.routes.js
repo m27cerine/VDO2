@@ -1,4 +1,4 @@
-import { create, findAll, findOne, update, deleteById, deleteAll } from "../controllers/professionnel.controller.js";
+import { create, findAll, findOne,findByEmail, update, deleteById, deleteAll } from "../controllers/professionnel.controller.js";
 import { Router } from "express";
 const router = Router();
 
@@ -11,7 +11,15 @@ export default app => {
         console.log("GET /api/professionnel: Request received");
         findAll(req, res);
     });
+
       
+          router.post('/login', (req, res) => {
+            console.log('POST /api/professionnel/login: Request received');
+            const { email, password } = req.body;
+            console.log(`email: ${email}, password: ${password}`);
+            findByEmail(req, res);
+        });    
+
     router.get("/:id", (req, res) => {
         console.log(`GET /api/professionnel/${req.params.id}: Request received`);
         findOne(req, res);

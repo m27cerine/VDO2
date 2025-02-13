@@ -25,6 +25,9 @@ import bcrypt from 'bcryptjs';
 import { createVendeurFn } from '../../api/vendeurApi';
 import { getAllWilayasFn } from '../../api/wilayaApi';
 import { getCommunesByWilaya } from '../../api/communeApi';
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+import { useRef } from "react";
 
 const VendeurForm = () => {
   const initialFormData = {
@@ -59,6 +62,68 @@ const VendeurForm = () => {
   const [communes, setCommunes] = useState([]);
   const { loginUser } = useUserContext();
   const navigate = useNavigate();
+  const [coordinates, setCoordinates] = useState({ lat: null, lng: null });
+  const [selectedPosition, setSelectedPosition] = useState(null);
+
+
+  
+  const handleAddressChange = async (address) => {
+    if (!address) {
+      setCoordinates({ lat: null, lng: null });
+      setSelectedPosition(null);
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1`
+      );
+      const data = await response.json();
+
+      if (data.length > 0) {
+        const newCoordinates = {
+          lat: parseFloat(data[0].lat),
+          lng: parseFloat(data[0].lon)
+        };
+        setCoordinates(newCoordinates);
+        setSelectedPosition(newCoordinates);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la géolocalisation :", error);
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+
+    if (name === 'password' || name === 'confirmPassword') {
+      setErrors(prev => {
+        const { password, confirmPassword, ...rest } = prev;
+        return rest;
+      });
+    } else if (errors[name]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
+
+    if (name === 'wilaya') {
+      setFormData(prev => ({ ...prev, commune: '' }));
+    }
+
+    if (name === 'adresse') {
+      handleAddressChange(value);
+    }
+
+    setErrorMessage('');
+  };
+
 
   useEffect(() => {
     const fetchWilayas = async () => {
@@ -99,27 +164,6 @@ const VendeurForm = () => {
       h.jour && h.ouverture && h.fermeture && h.ouverture < h.fermeture
     );
   };
-
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData(prev => {
-      if (name === 'wilaya') {
-        return {
-          ...prev,
-          [name]: value,
-          commune: '' 
-        };
-      }
-      return {
-        ...prev,
-        [name]: type === 'checkbox' ? checked : value
-      };
-    });
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: undefined }));
-    }
-  };
-
 
   const handleHoraireChange = (index, field, value) => {
     const newHoraires = [...horaires];
@@ -181,13 +225,16 @@ const VendeurForm = () => {
 
     setIsSubmitting(true);
     try {
+
+      
+      const hashedPassword = await bcrypt.hash(formData.password, 10);
       // Préparer les données à envoyer
       const dataToSend = {
         ...formData,
         idcommune: formData.commune, 
         accept_terms: formData.acceptTerms, 
         horaires: horaires.map(({ id, ...rest }) => rest),
-        password: formData.password
+        password: hashedPassword
       };
 
       // Supprimer les champs qui ne correspondent pas au modèle
@@ -206,6 +253,35 @@ const VendeurForm = () => {
       setIsSubmitting(false);
     }
   };
+
+
+
+const mapRef = useRef(null); // Référence pour stocker la carte
+const markerRef = useRef(null); // Référence pour stocker le marqueur
+
+useEffect(() => {
+  if (!mapRef.current && selectedPosition) {
+    // Initialisation unique de la carte
+    mapRef.current = L.map("map").setView([selectedPosition.lat, selectedPosition.lng], 13);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "© OpenStreetMap contributors",
+    }).addTo(mapRef.current);
+
+    // Ajout du marqueur initial
+    markerRef.current = L.marker([selectedPosition.lat, selectedPosition.lng])
+      .addTo(mapRef.current)
+      .bindPopup(formData.adresse || "Emplacement sélectionné")
+      .openPopup();
+  }
+
+  if (mapRef.current && markerRef.current && selectedPosition) {
+    // Mise à jour du marqueur
+    markerRef.current.setLatLng([selectedPosition.lat, selectedPosition.lng]);
+    markerRef.current.setPopupContent(formData.adresse || "Emplacement sélectionné").openPopup();
+    mapRef.current.setView([selectedPosition.lat, selectedPosition.lng], 13);
+  }
+}, [selectedPosition]); // Exécuter uniquement lorsque `selectedPosition` change
 
   return (
     <form onSubmit={handleSubmit}>
@@ -443,19 +519,31 @@ const VendeurForm = () => {
         </StyledTextField>
       </Box>
 
-        {/* Adresse */}
-        <StyledTextField
-          name="adresse"
-          value={formData.adresse}
-          onChange={handleChange}
-          placeholder="Adresse"
-          multiline
-          rows={3}
-        />
-        {/* Intégration de la carte Google Maps */}
-        <Box sx={{ height: 200, bgcolor: '#f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Typography>Carte ici (intégrer API Google Maps)</Typography>
-        </Box>
+         {/* Section adresse avec carte */}
+             <StyledTextField
+            fullWidth
+            name="adresse"
+            value={formData.adresse}
+            onChange={handleChange}
+            placeholder="Adresse complète"
+            multiline
+            rows={2}
+          />
+          
+          {/* Map will be shown automatically when address is entered */}
+          {selectedPosition && (
+            <Box 
+              id="map" 
+              sx={{ 
+                width: '100%', 
+                height: '400px', 
+                mt: 2,
+                border: '1px solid #ccc',
+                borderRadius: '4px'
+              }} 
+            />
+          )}
+  
 
           {/* Schedule section */}
           <Typography variant="h6">Horaires d'ouverture</Typography>

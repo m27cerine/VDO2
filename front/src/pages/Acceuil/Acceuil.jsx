@@ -51,7 +51,6 @@ const Accueil = () => {
     });
   };
   
-  
   const bestSellers = [
     { id: 1, name: 'Pneu Michelin 205/55 R16', price: 12000, image: '/api/placeholder/400/400' },
     { id: 2, name: 'Batterie Bosch 12V 60Ah', price: 15000, image: '/api/placeholder/400/400' },

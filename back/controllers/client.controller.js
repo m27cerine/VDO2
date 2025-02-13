@@ -51,16 +51,19 @@ export const findAll = (req, res) => {
     });
 };
 
-export const findOne = (req, res) => {
-    clientModel.findById(req.params.id, (err, data) => {
+export const findByEmail = (req, res) => {
+    const { email, password } = req.body;  // Utilisation de req.body au lieu de req.params
+    console.log(`Recherche client avec email: ${email} et password: ${password}`);
+
+    clientModel.findByEmail(email, password, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({
-                    message: `Not found client with id ${req.params.id}.`
+                    message: `Aucun client trouvé avec l'email ${email}.`
                 });
             } else {
                 res.status(500).send({
-                    message: "Error retrieving client with id " + req.params.id
+                    message: "Erreur lors de la recherche du client avec l'email " + email
                 });
             }
         } else {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   TextField,
@@ -18,83 +18,91 @@ import {
 } from '@mui/material';
 import { Search as SearchIcon, LocationOn as LocationOnIcon } from '@mui/icons-material';
 import Layout from '../components/LayoutC/Layout';
+import { getAllVendeursFn } from '../api/vendeurApi';
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
+import markerIconPng from "leaflet/dist/images/marker-icon.png";
+import markerShadowPng from "leaflet/dist/images/marker-shadow.png";
+
+const customIcon = L.icon({
+  iconUrl: markerIconPng,
+  shadowUrl: markerShadowPng,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+});
 
 const PartenairesListe = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [showMap, setShowMap] = useState(false);
   const [selectedPosition, setSelectedPosition] = useState(null);
+  const [vendeurs, setVendeurs] = useState([]);
+  const [error, setError] = useState(null);
   const partnersPerPage = 10;
 
-  // Exemple data
-  const partners = Array(15).fill({
-    nom: 'Test',
-    prenom: 'Test',
-    commune: 'Alger',
-    adresse: 'Rue des Martyrs, Alger',
-    telephone: '07737363738',
-    position: { lat: 36.752887, lng: 3.042048 },
-  });
+  useEffect(() => {
+    const fetchVendeurs = async () => {
+      try {
+        const vendeurData = await getAllVendeursFn();
+        setVendeurs(vendeurData);
+      } catch (error) {
+        console.error('Erreur lors de la récupération des vendeurs:', error);
+        setError("Impossible de charger les vendeurs");
+      }
+    };
+    fetchVendeurs();
+  }, []);
+
+  const getCoordinatesOSM = async (adresse) => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(adresse)}&format=json`
+      );
+      const data = await response.json();
+      return data.length > 0 ? { lat: data[0].lat, lng: data[0].lon } : null;
+    } catch (error) {
+      console.error("Erreur API OSM :", error);
+      return null;
+    }
+  };
+
+  const handleShowMap = async (adresse) => {
+    const coordinates = await getCoordinatesOSM(adresse);
+    if (coordinates) {
+      setSelectedPosition(coordinates);
+      setShowMap(true);
+    }
+  };
+
+  const handleCloseMap = () => setShowMap(false);
 
   const indexOfLastPartner = currentPage * partnersPerPage;
   const indexOfFirstPartner = indexOfLastPartner - partnersPerPage;
-  const currentPartners = partners.slice(indexOfFirstPartner, indexOfLastPartner);
-  const totalPages = Math.ceil(partners.length / partnersPerPage);
-
-  const handlePageChange = (event, page) => {
-    setCurrentPage(page);
-  };
-
-  const handleShowMap = (position) => {
-    setSelectedPosition(position);
-    setShowMap(true);
-  };
-
-  const handleCloseMap = () => {
-    setShowMap(false);
-  };
+  const currentPartners = vendeurs.slice(indexOfFirstPartner, indexOfLastPartner);
+  const totalPages = Math.ceil(vendeurs.length / partnersPerPage);
 
   return (
     <Layout>
-      <Typography variant="h4" mb={1} marginTop={2}>
-        Nos partenaires
-      </Typography>
-      <Typography variant="h6" mb={3}>
-        Recherchez un professionnel près de chez vous
-      </Typography>
+      <Typography variant="h4" mb={1} marginTop={2}>Nos partenaires</Typography>
+      <Typography variant="h6" mb={3}>Recherchez un professionnel près de chez vous</Typography>
+
+      {error && <Typography color="error" mb={2}>{error}</Typography>}
+
       <Box p={2}>
-        {/* Search bar section */}
-        <Stack direction="row"  mb={4} sx={{ width: '100%', maxWidth: '600px' }}>
-          <TextField
-            label="Métier"
-            variant="outlined"
-            size="small"
-            sx={{ flex: 1 }}
-          />
-          <TextField
-            label="Wilaya"
-            variant="outlined"
-            size="small"
-            sx={{ flex: 1 }}
-          />
-          <TextField
-            label="Commune"
-            variant="outlined"
-            size="small"
-            sx={{ flex: 1 }}
-          />
+        {/* Barre de recherche */}
+        <Stack direction="row" mb={4} spacing={1} sx={{ maxWidth: '800px', width: '100%' }}>
+          <TextField label="Métier" variant="outlined" size="small" fullWidth />
+          <TextField label="Wilaya" variant="outlined" size="small" fullWidth />
+          <TextField label="Commune" variant="outlined" size="small" fullWidth />
           <Button
             variant="contained"
-            startIcon={<SearchIcon />}
-            sx={{
-              bgcolor: '#fabd15',
-              color: 'black',
-              minWidth: '50px',
-              '&:hover': { bgcolor: '#fdd835' },
-            }}
-          />
+            sx={{ bgcolor: '#fabd15', color: 'black', '&:hover': { bgcolor: '#fdd835' } }}
+          >
+            <SearchIcon />
+          </Button>
         </Stack>
 
-        {/* Table */}
+        {/* Tableau des partenaires */}
         <TableContainer>
           <Table>
             <TableHead>
@@ -108,21 +116,13 @@ const PartenairesListe = () => {
             </TableHead>
             <TableBody>
               {currentPartners.map((partner, index) => (
-                <TableRow
-                  key={index}
-                  sx={{
-                    bgcolor: index % 2 === 0 ? '#f5f5f5' : 'white',
-                  }}
-                >
+                <TableRow key={index} sx={{ bgcolor: index % 2 === 0 ? '#f5f5f5' : 'white' }}>
                   <TableCell>{`${partner.nom} ${partner.prenom}`}</TableCell>
                   <TableCell>{partner.commune}</TableCell>
                   <TableCell>{partner.adresse}</TableCell>
                   <TableCell>{partner.telephone}</TableCell>
                   <TableCell>
-                    <IconButton
-                      onClick={() => handleShowMap(partner.position)}
-                      sx={{ color: '#fabd15' }}
-                    >
+                    <IconButton onClick={() => handleShowMap(partner.adresse)} sx={{ color: '#fabd15' }}>
                       <LocationOnIcon />
                     </IconButton>
                   </TableCell>
@@ -133,57 +133,20 @@ const PartenairesListe = () => {
         </TableContainer>
 
         {/* Pagination */}
-        <Box 
-          display="flex" 
-          justifyContent="center" 
-          mt={3}
-          sx={{
-            '& .MuiPagination-root': {
-              '& .MuiPaginationItem-root': {
-                color: '#000',
-                '&.Mui-selected': {
-                  bgcolor: '#fabd15',
-                  color: '#000',
-                  '&:hover': {
-                    bgcolor: '#fdd835',
-                  },
-                },
-              },
-            },
-          }}
-        >
-          <Pagination
-            count={totalPages}
-            page={currentPage}
-            onChange={handlePageChange}
-            variant="outlined"
-            siblingCount={1}
-            boundaryCount={1}
-          />
+        <Box display="flex" justifyContent="center" mt={3}>
+          <Pagination count={totalPages} page={currentPage} onChange={(e, page) => setCurrentPage(page)} />
         </Box>
 
-        {/* Map Dialog */}
-        <Dialog
-          open={showMap}
-          onClose={handleCloseMap}
-          maxWidth="md"
-          fullWidth
-          PaperProps={{
-            sx: {
-              bgcolor: 'rgba(255, 255, 255, 0.9)',
-              backdropFilter: 'blur(8px)',
-            },
-          }}
-        >
+        {/* Carte Dialog */}
+        <Dialog open={showMap} onClose={handleCloseMap} maxWidth="md" fullWidth>
           <DialogContent>
             {selectedPosition && (
-              <iframe
-                src={`https://maps.google.com/maps?q=${selectedPosition.lat},${selectedPosition.lng}&z=15&output=embed`}
-                width="100%"
-                height="500"
-                style={{ border: 'none' }}
-                title="Carte"
-              />
+              <MapContainer center={[selectedPosition.lat, selectedPosition.lng]} zoom={13} style={{ height: "500px", width: "100%" }}>
+                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                <Marker position={[selectedPosition.lat, selectedPosition.lng]} icon={customIcon}>
+                  <Popup>Position du partenaire</Popup>
+                </Marker>
+              </MapContainer>
             )}
           </DialogContent>
         </Dialog>

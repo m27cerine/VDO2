@@ -1,4 +1,5 @@
 import pool from "../config/db.js";
+import bcrypt from 'bcrypt';
 
 class client {
     constructor(client) {
@@ -59,6 +60,31 @@ static create(newClient, result) {
                 result(null, { id: res.insertId, ...newClient });
             }
         );
+    });
+}
+
+static findByEmail(email, password, result) {
+    pool.query(`SELECT * FROM client WHERE email = ?`, [email], async (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(err, null);
+            return;
+        }
+
+        if (res.length) {
+            const client = res[0]; // Récupère l'utilisateur
+            const isMatch = await bcrypt.compare(password, client.password); // Compare le mot de passe en clair avec le hashé
+
+            if (isMatch) {
+                console.log("Client authentifié avec succès");
+                result(null, client); // Retourne les données du client
+            } else {
+                console.log("Mot de passe incorrect");
+                result({ kind: "not_found" }, null); // Mauvais mot de passe
+            }
+        } else {
+            result({ kind: "not_found" }, null); // Email non trouvé
+        }
     });
 }
 

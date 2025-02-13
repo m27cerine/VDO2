@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -20,6 +20,9 @@ import bcrypt from 'bcryptjs';
 import { createProfessionnelFn } from '../../api/professionnelApi';
 import { useUserContext } from "../../context/UserContext";
 import { useNavigate } from 'react-router-dom';
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+import { useRef } from "react";
 
 const ProfessionnelForm = () => {
   const initialFormData = {
@@ -51,6 +54,8 @@ const ProfessionnelForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [wilayas, setWilayas] = useState([]);
   const [communes, setCommunes] = useState([]);
+  const [coordinates, setCoordinates] = useState({ lat: null, lng: null });
+  const [selectedPosition, setSelectedPosition] = useState(null);
   const { loginUser } = useUserContext();
   const navigate = useNavigate();
 
@@ -85,7 +90,32 @@ const ProfessionnelForm = () => {
     });
   };
 
-  // Fonction handleChange qui gère tous les types d'inputs
+  const handleAddressChange = async (address) => {
+    if (!address) {
+      setCoordinates({ lat: null, lng: null });
+      setSelectedPosition(null);
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1`
+      );
+      const data = await response.json();
+
+      if (data.length > 0) {
+        const newCoordinates = {
+          lat: parseFloat(data[0].lat),
+          lng: parseFloat(data[0].lon)
+        };
+        setCoordinates(newCoordinates);
+        setSelectedPosition(newCoordinates);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la géolocalisation :", error);
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
@@ -93,13 +123,10 @@ const ProfessionnelForm = () => {
       [name]: type === 'checkbox' ? checked : value,
     }));
 
-    // Suppression des erreurs liées aux mots de passe ou autres
     if (name === 'password' || name === 'confirmPassword') {
       setErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors.password;
-        delete newErrors.confirmPassword;
-        return newErrors;
+        const { password, confirmPassword, ...rest } = prev;
+        return rest;
       });
     } else if (errors[name]) {
       setErrors(prev => {
@@ -109,9 +136,12 @@ const ProfessionnelForm = () => {
       });
     }
 
-    // Réinitialiser la commune lorsque la wilaya change
     if (name === 'wilaya') {
       setFormData(prev => ({ ...prev, commune: '' }));
+    }
+
+    if (name === 'adresse') {
+      handleAddressChange(value);
     }
 
     setErrorMessage('');
@@ -132,9 +162,8 @@ const ProfessionnelForm = () => {
     
     if (errors.horaires) {
       setErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors.horaires;
-        return newErrors;
+        const { horaires, ...rest } = prev;
+        return rest;
       });
     }
   };
@@ -144,11 +173,7 @@ const ProfessionnelForm = () => {
     const requiredFields = ['nom', 'prenom', 'username', 'email', 'telephone', 'password', 'metier', 'wilaya', 'commune'];
   
     requiredFields.forEach(field => {
-      const value = formData[field];
-      if (
-        (typeof value === 'string' && !value.trim()) ||
-        (typeof value !== 'string' && (value === undefined || value === null || value === ''))
-      ) {
+      if (!formData[field]?.toString().trim()) {
         validationErrors[field] = `Le champ ${field} est requis`;
       }
     });
@@ -174,7 +199,7 @@ const ProfessionnelForm = () => {
     }
   
     if (!validateHoraires(horaires)) {
-      validationErrors.horaires = "Les horaires sont invalides ou incomplets. Vérifiez que :\n- Chaque jour est unique\n- Les heures sont au format HH:MM\n- L'heure de fermeture est après l'heure d'ouverture";
+      validationErrors.horaires = "Les horaires sont invalides ou incomplets";
     }
   
     if (!formData.acceptTerms) {
@@ -183,7 +208,6 @@ const ProfessionnelForm = () => {
   
     return validationErrors;
   };
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -217,78 +241,46 @@ const ProfessionnelForm = () => {
         identification_fiscale: formData.identificationFiscale,
         article_imposition: formData.articleImposition,
         adresse: formData.adresse,      
-        accept_terms: formData.acceptTerms ?? false,  
-        inscrit_annuaire: formData.inscritAnnuaire ?? false, 
+        accept_terms: formData.acceptTerms,
+        inscrit_annuaire: formData.inscritAnnuaire,
         idCommune: formData.commune,
-        horaires: horaires.length > 0 ? horaires : [], 
+        horaires: horaires.filter(h => h.jour && h.ouverture && h.fermeture),
+        coordinates
       };
-    
-      console.log('Données envoyées au serveur:', dataToSend);
     
       const professionnelData = await createProfessionnelFn(dataToSend);
       loginUser(professionnelData);
-    
       setSuccessMessage("Compte créé avec succès !");
+      
       setTimeout(() => {
         navigate("/acceuil");
       }, 1000);
     
-      setFormData(initialFormData);
-      setHoraires([{ id: Date.now(), jour: '', ouverture: '', fermeture: '' }]);
-    
     } catch (error) {
-      console.error("Erreur complète :", error);
-      console.log("Error response:", error.response);
-      console.log("Error data:", error.response?.data);
-    
-      const newErrors = {};
-    
-      // Gestion des erreurs spécifiques
-      if (error.response) {
-        switch (error.response.data?.kind) {
-          case "username_exists":
-            newErrors.username = "Ce nom d'utilisateur est déjà utilisé";
-            setErrorMessage("Ce nom d'utilisateur est déjà utilisé");
-            break;
-          
-          case "email_exists":
-            newErrors.email = "Cette adresse e-mail est déjà utilisée";
-            setErrorMessage("Cette adresse e-mail est déjà utilisée");
-            break;
-          
-          default:
-            setErrorMessage("Une erreur est survenue lors de la création du compte");
-        }
+      const errorData = error.response?.data;
+      
+      if (errorData?.kind === "username_exists") {
+        setErrors(prev => ({ ...prev, username: "Ce nom d'utilisateur est déjà utilisé" }));
+        setErrorMessage("Ce nom d'utilisateur est déjà utilisé");
+      } else if (errorData?.kind === "email_exists") {
+        setErrors(prev => ({ ...prev, email: "Cette adresse e-mail est déjà utilisée" }));
+        setErrorMessage("Cette adresse e-mail est déjà utilisée");
       } else {
-        setErrorMessage("Erreur de connexion au serveur");
+        setErrorMessage("Une erreur est survenue lors de la création du compte");
       }
-    
-      // Mettre à jour les erreurs du formulaire
-      setErrors(prev => ({
-        ...prev,
-        ...newErrors
-      }));
-    
-      console.log("Nouvelles erreurs :", newErrors);
-      console.log("Message d'erreur :", errorMessage);
     } finally {
       setIsSubmitting(false);
     }
   };
-  
+
   useEffect(() => {
     const fetchWilayas = async () => {
       try {
         const wilayaData = await getAllWilayasFn();
-        console.log('Fetched Wilayas:', wilayaData); 
         if (Array.isArray(wilayaData)) {
           setWilayas(wilayaData);
-        } else {
-          console.error("Les données des wilayas ne sont pas dans le format attendu");
-          setWilayas([]);
         }
       } catch (error) {
-        console.error("Erreur lors de la récupération des wilayas:", error);
         setErrorMessage("Impossible de charger les wilayas");
         setWilayas([]);
       }
@@ -300,21 +292,16 @@ const ProfessionnelForm = () => {
   useEffect(() => {
     const fetchCommunes = async () => {
       if (!formData.wilaya) {
-        setCommunes([]); 
+        setCommunes([]);
         return;
       }
   
       try {
         const communeData = await getCommunesByWilaya(formData.wilaya);
-        console.log('Fetched Communes:', communeData); 
         if (Array.isArray(communeData)) {
           setCommunes(communeData);
-        } else {
-          console.error("Les données des communes ne sont pas dans le format attendu");
-          setCommunes([]);
         }
       } catch (error) {
-        console.error("Erreur lors de la récupération des communes:", error);
         setErrorMessage("Impossible de charger les communes");
         setCommunes([]);
       }
@@ -322,6 +309,34 @@ const ProfessionnelForm = () => {
   
     fetchCommunes();
   }, [formData.wilaya]);
+
+const mapRef = useRef(null); // Référence pour stocker la carte
+const markerRef = useRef(null); // Référence pour stocker le marqueur
+
+useEffect(() => {
+  if (!mapRef.current && selectedPosition) {
+    // Initialisation unique de la carte
+    mapRef.current = L.map("map").setView([selectedPosition.lat, selectedPosition.lng], 13);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "© OpenStreetMap contributors",
+    }).addTo(mapRef.current);
+
+    // Ajout du marqueur initial
+    markerRef.current = L.marker([selectedPosition.lat, selectedPosition.lng])
+      .addTo(mapRef.current)
+      .bindPopup(formData.adresse || "Emplacement sélectionné")
+      .openPopup();
+  }
+
+  if (mapRef.current && markerRef.current && selectedPosition) {
+    // Mise à jour du marqueur
+    markerRef.current.setLatLng([selectedPosition.lat, selectedPosition.lng]);
+    markerRef.current.setPopupContent(formData.adresse || "Emplacement sélectionné").openPopup();
+    mapRef.current.setView([selectedPosition.lat, selectedPosition.lng], 13);
+  }
+}, [selectedPosition]); // Exécuter uniquement lorsque `selectedPosition` change
+
 
   return (
     <form onSubmit={handleSubmit}>
@@ -532,19 +547,30 @@ const ProfessionnelForm = () => {
           </StyledTextField>
         </Box>
 
-        {/* Adresse */}
-        <StyledTextField
+           {/* Section adresse avec carte */}
+           <StyledTextField
+          fullWidth
           name="adresse"
           value={formData.adresse}
           onChange={handleChange}
-          placeholder="Adresse"
+          placeholder="Adresse complète"
           multiline
-          rows={3}
+          rows={2}
         />
-        {/* Intégration de la carte Google Maps */}
-        <Box sx={{ height: 200, bgcolor: '#f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Typography>Carte ici (intégrer API Google Maps)</Typography>
-        </Box>
+        
+        {/* Map will be shown automatically when address is entered */}
+        {selectedPosition && (
+          <Box 
+            id="map" 
+            sx={{ 
+              width: '100%', 
+              height: '400px', 
+              mt: 2,
+              border: '1px solid #ccc',
+              borderRadius: '4px'
+            }} 
+          />
+        )}
 
         {/* Section des horaires */}
         <Typography variant="h6">Horaires d'ouverture</Typography>

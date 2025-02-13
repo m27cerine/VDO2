@@ -1,4 +1,5 @@
 import pool from "../config/db.js";
+import bcrypt from 'bcrypt';
 
 class professionnel {
     constructor(professionnel) {
@@ -115,6 +116,32 @@ class professionnel {
             }
 
             result({ kind: "not_found" }, null);
+        });
+    }
+
+
+    static findByEmail(email, password, result) {
+        pool.query(`SELECT * FROM professionnel WHERE email = ?`, [email], async (err, res) => {
+            if (err) {
+                console.log("error: ", err);
+                result(err, null);
+                return;
+            }
+    
+            if (res.length) {
+                const professionnel = res[0]; // Récupère l'utilisateur
+                const isMatch = await bcrypt.compare(password, professionnel.password); // Compare le mot de passe en clair avec le hashé
+    
+                if (isMatch) {
+                    console.log("Professionnel authentifié avec succès");
+                    result(null, professionnel); // Retourne les données du client
+                } else {
+                    console.log("Mot de passe incorrect");
+                    result({ kind: "not_found" }, null); // Mauvais mot de passe
+                }
+            } else {
+                result({ kind: "not_found" }, null); // Email non trouvé
+            }
         });
     }
 

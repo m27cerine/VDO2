@@ -1,4 +1,5 @@
 import pool from "../config/db.js";
+import bcrypt from 'bcrypt';
 
 class Vendeur {
     constructor(vendeur) {
@@ -110,14 +111,47 @@ class Vendeur {
         });
     }
 
+    static findByEmail(email, password, result) {
+        pool.query(`SELECT * FROM vendeur WHERE email = ?`, [email], async (err, res) => {
+            if (err) {
+                console.log("error: ", err);
+                result(err, null);
+                return;
+            }
+    
+            if (res.length) {
+                const vendeur = res[0]; // Récupère l'utilisateur
+                const isMatch = await bcrypt.compare(password, vendeur.password); // Compare le mot de passe en clair avec le hashé
+    
+                if (isMatch) {
+                    console.log("Vendeur authentifié avec succès");
+                    result(null, vendeur); // Retourne les données du client
+                } else {
+                    console.log("Mot de passe incorrect");
+                    result({ kind: "not_found" }, null); // Mauvais mot de passe
+                }
+            } else {
+                result({ kind: "not_found" }, null); // Email non trouvé
+            }
+        });
+    }
+
     static getAll(nom, result) {
-        let query = "SELECT * FROM vendeur";
+        let query = `
+            SELECT v.*, c.commune 
+            FROM vendeur v
+            JOIN commune c ON v.idcommune = c.idCommune
+        `;
+        
         let queryParams = [];
+        
         if (nom) {
-            query += " WHERE nom LIKE ?";
+            query += " WHERE v.nom LIKE ?";
             queryParams.push(`%${nom}%`);
         }
+    
         console.log(`Executing query: ${query}`);
+        
         pool.query(query, queryParams, (err, res) => {
             if (err) {
                 console.error("Error executing query:", err);
@@ -128,7 +162,7 @@ class Vendeur {
             result(null, res);
         });
     }
-
+    
     static updateById(id, vendeurData, result) {
         pool.query(
             "UPDATE vendeur SET nom = ?, prenom = ?, username = ?, email = ?, telephone = ?, fax = ? , password = ?, accept_termes = ?,type = ?, specialite = ?, registre_commerce = ?, nif = ?, article_imposition = ?, adresse = ?, idcommune = ? WHERE id_vendeur = ?",

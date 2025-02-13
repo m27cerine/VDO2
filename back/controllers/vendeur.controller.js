@@ -86,6 +86,27 @@ export const findOne = (req, res) => {
     });
 };
 
+export const findByEmail = (req, res) => {
+    const { email, password } = req.body;  // Utilisation de req.body au lieu de req.params
+    console.log(`Recherche vendeur avec email: ${email} et password: ${password}`);
+
+    vendeurModel.findByEmail(email, password, (err, data) => {
+        if (err) {
+            if (err.kind === "not_found") {
+                res.status(404).send({
+                    message: `Aucun vendeur trouvé avec l'email ${email}.`
+                });
+            } else {
+                res.status(500).send({
+                    message: "Erreur lors de la recherche du vendeur avec l'email " + email
+                });
+            }
+        } else {
+            res.send(data);
+        }
+    });
+};
+
 export const update = (req, res) => {
     if (!req.body) {
         return res.status(400).send({

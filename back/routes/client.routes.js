@@ -1,4 +1,4 @@
-import { create, findAll, findOne, update, deleteById, deleteAll } from "../controllers/client.controller.js";
+import { create, findAll, findByEmail, update, deleteById, deleteAll } from "../controllers/client.controller.js";
 import { Router } from "express";
 const router = Router();
 
@@ -12,11 +12,14 @@ export default app => {
         findAll(req, res);
       });
       
-      router.get("/:id", (req, res) => {
-        console.log(`GET /api/client/${req.params.id}: Request received`);
-        findOne(req, res);
-      });      
-  
+
+      router.post('/login', (req, res) => {
+        console.log('POST /api/client/login: Request received');
+        const { email, password } = req.body;
+        console.log(`email: ${email}, password: ${password}`);
+        findByEmail(req, res);
+    });    
+
     // Update an Client with id
     router.put("/:id", update);
   

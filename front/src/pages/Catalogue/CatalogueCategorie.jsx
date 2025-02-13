@@ -26,7 +26,7 @@ const Catalogue = () => {
   return (
     <Layout>
       <Box sx={{ bgcolor: 'white', minHeight: '100vh' }}>
-        <AppBar position="static" color="default" elevation={0}>
+        <AppBar position="static" color="white" elevation={0}>
           <Toolbar sx={{ justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <Box

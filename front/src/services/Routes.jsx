@@ -43,7 +43,6 @@ const RoutesPages = () => {
         <Route path="/catalogue/pieces/:sousCategorieId" element={<ProduitCatalogue />} />
         <Route path="/catalogue/details/:products" element={<ProduitDetails />} />
 
-
       </Routes>
     </UserProvider>
     </div>

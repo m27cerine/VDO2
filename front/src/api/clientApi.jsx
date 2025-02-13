@@ -5,6 +5,12 @@ export const getClientFn = async (idClient) => {
     return response.data;
 };
 
+export const getClientByEmailFn = async (email, password) => {
+    const response = await authApi.post('client/login', { email, password });
+    return response.data;
+  };
+  
+
 export const getAllClientsFn = async () => {
     const response = await authApi.get(`Client`);
     return response.data;
