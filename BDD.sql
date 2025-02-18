@@ -19,38 +19,22 @@
 CREATE DATABASE IF NOT EXISTS `piecedetache` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `piecedetache`;
 
--- Listage de la structure de la table piecedetache. acheteur
-CREATE TABLE IF NOT EXISTS `acheteur` (
-  `id_acheteur` int(11) NOT NULL AUTO_INCREMENT,
-  `nom_acheteur` varchar(100) NOT NULL,
-  `adresse` text NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `telephone` varchar(20) NOT NULL,
-  `numero_registre_commerce` varchar(50) DEFAULT NULL,
-  `numero_identification_fiscale` varchar(50) DEFAULT NULL,
-  `article_imposition` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`id_acheteur`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
-
--- Listage des données de la table piecedetache.acheteur : ~2 rows (environ)
-INSERT INTO `acheteur` (`id_acheteur`, `nom_acheteur`, `adresse`, `email`, `telephone`, `numero_registre_commerce`, `numero_identification_fiscale`, `article_imposition`) VALUES
-	(1, 'Garage Dupont', '123 rue des Ateliers, Paris', 'contact@garage-dupont.fr', '0102030405', 'RC123456', 'NIF123456', 'AI123'),
-	(2, 'Transporteur X', '456 avenue des Transports, Lyon', 'info@transporteurx.com', '0607080910', 'RC789012', 'NIF789012', 'AI456');
-
--- Listage de la structure de la table piecedetache. acheteur_piece
-CREATE TABLE IF NOT EXISTS `acheteur_piece` (
-  `id_acheteur` int(11) NOT NULL,
+-- Listage de la structure de la table piecedetache. avis
+CREATE TABLE IF NOT EXISTS `avis` (
+  `id_avis` int(11) NOT NULL AUTO_INCREMENT,
+  `id_client` int(11) NOT NULL,
   `id_piece` int(11) NOT NULL,
-  PRIMARY KEY (`id_acheteur`,`id_piece`),
+  `note` tinyint(4) NOT NULL,
+  `commentaire` text,
+  `date_avis` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_avis`),
+  KEY `id_client` (`id_client`),
   KEY `id_piece` (`id_piece`),
-  CONSTRAINT `acheteur_piece_ibfk_1` FOREIGN KEY (`id_acheteur`) REFERENCES `acheteur` (`id_acheteur`),
-  CONSTRAINT `acheteur_piece_ibfk_2` FOREIGN KEY (`id_piece`) REFERENCES `piece` (`id_piece`)
+  CONSTRAINT `avis_ibfk_1` FOREIGN KEY (`id_client`) REFERENCES `client` (`id_client`) ON DELETE CASCADE,
+  CONSTRAINT `avis_ibfk_2` FOREIGN KEY (`id_piece`) REFERENCES `piece` (`id_piece`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Listage des données de la table piecedetache.acheteur_piece : ~2 rows (environ)
-INSERT INTO `acheteur_piece` (`id_acheteur`, `id_piece`) VALUES
-	(1, 1),
-	(2, 2);
+-- Listage des données de la table piecedetache.avis : ~0 rows (environ)
 
 -- Listage de la structure de la table piecedetache. caracteristique
 CREATE TABLE IF NOT EXISTS `caracteristique` (
@@ -94,32 +78,41 @@ CREATE TABLE IF NOT EXISTS `client` (
   `accept_terms` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_client`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 
--- Listage des données de la table piecedetache.client : ~7 rows (environ)
+-- Listage des données de la table piecedetache.client : ~2 rows (environ)
 INSERT INTO `client` (`id_client`, `nom`, `prenom`, `username`, `email`, `telephone`, `password`, `accept_terms`) VALUES
-	(1, 'Jean Martin', 'test', 'jean martin_1', 'jean.martin@email.com', '00000', 'mdp123', 0),
-	(2, 'Claire Dupuis', 'test', 'claire dupuis_2', 'claire.dupuis@email.com', '000000000', 'securepassword', 0),
-	(3, 'Cerine', 'CHELABI', 'cerine', 'chelabimaroua@gmail.com', '0666161697', 'Test123', 1),
-	(5, 'Maroua', 'CHELABI', 'cerine1234', 'chelabimaroua@gmail.com', '0666161697', '$2a$10$dna1R4qtygqz1Pbf/R.5ruCJcLa.GygtasVJmoAv3TLtravwQiTsy', 1),
-	(6, 'Maroua', 'CHELABI', 'cerine0003', 'chelabimaroua@gmail.com', '0666161697', '$2a$10$BMI9jnmWbcyyHDuvSTpH3uWEXPp8yJelIos0c/sGcUEEC55xSRP32', 1),
-	(9, 'Maroua', 'CHELABI', 'cerine00031', 'chelabimaroua@gmail.com', '0666161697', '$2a$10$Gi9zq.YEneuoZHgITAnyUufGzUDy/L87.rHYSAf5T5PifFkEEtqBy', 1),
-	(13, 'Maroua', 'CHELABI', 'cerine000314', 'chelabimaroua@gmail.com', 'cerine0003', '$2a$10$Uiz02afmOOKrg2TvIboqm.I7yV0Xml3PSQ4ZNTm8jIfBPXEU8ljJ2', 1);
+	(15, 'Test1', 'Test1', 'test1188', 'test1@gmail.com', '0666161697', '$2a$10$VCAjDsSYt0Ew8TvDI9hDke0yF6ojIUyUA0KRds7DS0FPhNlsZ0OiS', 1);
 
--- Listage de la structure de la table piecedetache. client_piece
-CREATE TABLE IF NOT EXISTS `client_piece` (
+-- Listage de la structure de la table piecedetache. commande
+CREATE TABLE IF NOT EXISTS `commande` (
+  `id_commande` int(11) NOT NULL AUTO_INCREMENT,
   `id_client` int(11) NOT NULL,
+  `date` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_commande`),
+  KEY `id_client` (`id_client`),
+  CONSTRAINT `commande_ibfk_1` FOREIGN KEY (`id_client`) REFERENCES `client` (`id_client`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+-- Listage des données de la table piecedetache.commande : ~1 rows (environ)
+INSERT INTO `commande` (`id_commande`, `id_client`, `date`) VALUES
+	(1, 15, '2025-02-18 01:13:46');
+
+-- Listage de la structure de la table piecedetache. commande_piece
+CREATE TABLE IF NOT EXISTS `commande_piece` (
+  `id_commande` int(11) NOT NULL,
   `id_piece` int(11) NOT NULL,
-  PRIMARY KEY (`id_client`,`id_piece`),
+  `quantite` int(11) NOT NULL DEFAULT '1',
+  `etat` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id_commande`,`id_piece`),
   KEY `id_piece` (`id_piece`),
-  CONSTRAINT `client_piece_ibfk_1` FOREIGN KEY (`id_client`) REFERENCES `client` (`id_client`),
-  CONSTRAINT `client_piece_ibfk_2` FOREIGN KEY (`id_piece`) REFERENCES `piece` (`id_piece`)
+  CONSTRAINT `commande_piece_ibfk_1` FOREIGN KEY (`id_commande`) REFERENCES `commande` (`id_commande`) ON DELETE CASCADE,
+  CONSTRAINT `commande_piece_ibfk_2` FOREIGN KEY (`id_piece`) REFERENCES `piece` (`id_piece`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Listage des données de la table piecedetache.client_piece : ~2 rows (environ)
-INSERT INTO `client_piece` (`id_client`, `id_piece`) VALUES
-	(2, 1),
-	(1, 3);
+-- Listage des données de la table piecedetache.commande_piece : ~1 rows (environ)
+INSERT INTO `commande_piece` (`id_commande`, `id_piece`, `quantite`, `etat`) VALUES
+	(1, 1, 3, 'en attente');
 
 -- Listage de la structure de la table piecedetache. commune
 CREATE TABLE IF NOT EXISTS `commune` (
@@ -1675,6 +1668,50 @@ INSERT INTO `commune` (`idCommune`, `commune`, `idWilaya`) VALUES
 	(1540, 'Yellel', 48),
 	(1541, 'Zemmoura', 48);
 
+-- Listage de la structure de la table piecedetache. featured_products
+CREATE TABLE IF NOT EXISTS `featured_products` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `product_id` int(11) NOT NULL,
+  `section_type` enum('best_seller','flash_sale') NOT NULL,
+  `position` int(11) DEFAULT NULL,
+  `start_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `end_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `is_active` tinyint(1) DEFAULT '1',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `product_id` (`product_id`),
+  CONSTRAINT `featured_products_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `piece` (`id_piece`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Listage des données de la table piecedetache.featured_products : ~0 rows (environ)
+
+-- Listage de la structure de la table piecedetache. home_page_history
+CREATE TABLE IF NOT EXISTS `home_page_history` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `section_type` enum('settings','banner','featured_product','news') NOT NULL,
+  `section_id` int(11) NOT NULL,
+  `action_type` enum('create','update','delete') NOT NULL,
+  `changes` json DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Listage des données de la table piecedetache.home_page_history : ~0 rows (environ)
+
+-- Listage de la structure de la table piecedetache. home_page_settings
+CREATE TABLE IF NOT EXISTS `home_page_settings` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `main_promo_image` varchar(255) DEFAULT NULL,
+  `main_promo_title` varchar(100) DEFAULT NULL,
+  `main_promo_subtitle` varchar(200) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Listage des données de la table piecedetache.home_page_settings : ~0 rows (environ)
+
 -- Listage de la structure de la table piecedetache. horaire
 CREATE TABLE IF NOT EXISTS `horaire` (
   `id_horaire` int(11) NOT NULL AUTO_INCREMENT,
@@ -1684,7 +1721,7 @@ CREATE TABLE IF NOT EXISTS `horaire` (
   PRIMARY KEY (`id_horaire`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
--- Listage des données de la table piecedetache.horaire : ~1 rows (environ)
+-- Listage des données de la table piecedetache.horaire : ~0 rows (environ)
 INSERT INTO `horaire` (`id_horaire`, `jour`, `heure_ouverture`, `heure_fermeture`) VALUES
 	(1, 'Lundi', '08:30:00', '18:00:00');
 
@@ -1708,6 +1745,7 @@ CREATE TABLE IF NOT EXISTS `modele` (
   `nom_modele` varchar(50) NOT NULL,
   `id_marque` int(11) NOT NULL,
   `id_type` int(11) NOT NULL,
+  `annee` date DEFAULT NULL,
   PRIMARY KEY (`id_modele`),
   KEY `id_marque` (`id_marque`),
   KEY `id_type` (`id_type`),
@@ -1716,10 +1754,10 @@ CREATE TABLE IF NOT EXISTS `modele` (
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- Listage des données de la table piecedetache.modele : ~3 rows (environ)
-INSERT INTO `modele` (`id_modele`, `nom_modele`, `id_marque`, `id_type`) VALUES
-	(1, 'Corolla', 1, 1),
-	(2, 'Duster', 2, 2),
-	(3, 'Transit', 3, 3);
+INSERT INTO `modele` (`id_modele`, `nom_modele`, `id_marque`, `id_type`, `annee`) VALUES
+	(1, 'Corolla', 1, 1, NULL),
+	(2, 'Duster', 2, 2, NULL),
+	(3, 'Transit', 3, 3, NULL);
 
 -- Listage de la structure de la table piecedetache. motorisation
 CREATE TABLE IF NOT EXISTS `motorisation` (
@@ -1753,6 +1791,25 @@ INSERT INTO `motorisation_categorie` (`id_motorisation`, `id_categorie`) VALUES
 	(2, 2),
 	(3, 3);
 
+-- Listage de la structure de la table piecedetache. news
+CREATE TABLE IF NOT EXISTS `news` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(200) NOT NULL,
+  `content` text,
+  `image_url` varchar(255) DEFAULT NULL,
+  `link` varchar(255) DEFAULT NULL,
+  `author` varchar(100) DEFAULT NULL,
+  `position` int(11) DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT '1',
+  `publication_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `expiration_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Listage des données de la table piecedetache.news : ~0 rows (environ)
+
 -- Listage de la structure de la table piecedetache. piece
 CREATE TABLE IF NOT EXISTS `piece` (
   `id_piece` int(11) NOT NULL AUTO_INCREMENT,
@@ -1762,16 +1819,18 @@ CREATE TABLE IF NOT EXISTS `piece` (
   `quantite_stock` int(11) NOT NULL,
   `id_sous_categorie` int(11) NOT NULL,
   `image_url` varchar(500) DEFAULT NULL,
+  `reference` varchar(50) DEFAULT NULL,
+  `marque` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id_piece`),
   KEY `id_sous_categorie` (`id_sous_categorie`),
   CONSTRAINT `piece_ibfk_1` FOREIGN KEY (`id_sous_categorie`) REFERENCES `sous_categorie` (`id_sous_categorie`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- Listage des données de la table piecedetache.piece : ~3 rows (environ)
-INSERT INTO `piece` (`id_piece`, `nom_piece`, `description`, `prix`, `quantite_stock`, `id_sous_categorie`, `image_url`) VALUES
-	(1, 'Courroie de distribution renforcée', 'Convient pour les moteurs de type Essence', 150.50, 10, 1, 'https://hp-performances.com/14186-large_default/courroie-de-distribution-toda-racing-renforcee-b-series-b18c-b16b.jpg'),
-	(2, 'Kit d’embrayage', 'Compatible avec les véhicules utilitaires', 300.00, 5, 2, 'https://www.eurorepar.com/uploads/ligne_produit/3557/100-6d8a070fd4f11a31b2559baa31156d84.png'),
-	(3, 'Plaquettes de frein haute performance', 'Optimisé pour SUV', 75.20, 20, 3, 'https://image.made-in-china.com/202f0j00lAvkImHBPsbC/Manufacturer-High-Quality-High-Performance-Brake-System-Car-Brake-Pad.webp');
+INSERT INTO `piece` (`id_piece`, `nom_piece`, `description`, `prix`, `quantite_stock`, `id_sous_categorie`, `image_url`, `reference`, `marque`) VALUES
+	(1, 'Courroie de distribution renforcée', 'Convient pour les moteurs de type Essence', 150.50, 10, 1, 'https://hp-performances.com/14186-large_default/courroie-de-distribution-toda-racing-renforcee-b-series-b18c-b16b.jpg', NULL, NULL),
+	(2, 'Kit d’embrayage', 'Compatible avec les véhicules utilitaires', 300.00, 5, 2, 'https://www.eurorepar.com/uploads/ligne_produit/3557/100-6d8a070fd4f11a31b2559baa31156d84.png', NULL, NULL),
+	(3, 'Plaquettes de frein haute performance', 'Optimisé pour SUV', 75.20, 20, 3, 'https://image.made-in-china.com/202f0j00lAvkImHBPsbC/Manufacturer-High-Quality-High-Performance-Brake-System-Car-Brake-Pad.webp', NULL, NULL);
 
 -- Listage de la structure de la table piecedetache. piece_caracteristique
 CREATE TABLE IF NOT EXISTS `piece_caracteristique` (
@@ -1831,7 +1890,7 @@ CREATE TABLE IF NOT EXISTS `professionnel` (
   CONSTRAINT `professionnel_ibfk_1` FOREIGN KEY (`idCommune`) REFERENCES `commune` (`idCommune`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
--- Listage des données de la table piecedetache.professionnel : ~6 rows (environ)
+-- Listage des données de la table piecedetache.professionnel : ~5 rows (environ)
 INSERT INTO `professionnel` (`id_professionnel`, `nom`, `prenom`, `username`, `email`, `telephone`, `password`, `accept_terms`, `metier`, `registre_commerce`, `identification_fiscale`, `article_imposition`, `adresse`, `inscrit_annuaire`, `idCommune`) VALUES
 	(1, 'Dupont', 'Jean', 'jdupont', 'jean.dupont@example.com', '0612345678', 'hashed_password', 1, 'Médecin', 'RC123456', 'IF789012', 'Article A', '12 Rue des roses', 1, 1),
 	(2, 'Cerine', 'CHELABI', 'cerine0003', 'chelabimaroua@gmail.com', '0666161697', '$2a$10$owQGB1/3Ov1HgHvVgrCUMe1LvpmSGkCwLxiNKzdLope6Gg.3FJiqS', NULL, 'metier1', '1234', '123', '1234', 'AZER', 0, 1),
@@ -1850,9 +1909,29 @@ CREATE TABLE IF NOT EXISTS `professionnel_horaire` (
   CONSTRAINT `professionnel_horaire_ibfk_2` FOREIGN KEY (`id_horaire`) REFERENCES `horaire` (`id_horaire`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Listage des données de la table piecedetache.professionnel_horaire : ~1 rows (environ)
+-- Listage des données de la table piecedetache.professionnel_horaire : ~0 rows (environ)
 INSERT INTO `professionnel_horaire` (`id_professionnel`, `id_horaire`) VALUES
 	(1, 1);
+
+-- Listage de la structure de la table piecedetache. promo_banners
+CREATE TABLE IF NOT EXISTS `promo_banners` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `image_url` varchar(255) NOT NULL,
+  `title` varchar(100) DEFAULT NULL,
+  `subtitle` varchar(200) DEFAULT NULL,
+  `button_text` varchar(50) DEFAULT NULL,
+  `link` varchar(255) DEFAULT NULL,
+  `position` int(11) DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT '1',
+  `dark_overlay` tinyint(1) DEFAULT '0',
+  `start_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `end_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Listage des données de la table piecedetache.promo_banners : ~0 rows (environ)
 
 -- Listage de la structure de la table piecedetache. sous_categorie
 CREATE TABLE IF NOT EXISTS `sous_categorie` (
@@ -1907,11 +1986,12 @@ CREATE TABLE IF NOT EXISTS `vendeur` (
   UNIQUE KEY `email` (`email`),
   KEY `idcommune` (`idcommune`),
   CONSTRAINT `vendeur_ibfk_1` FOREIGN KEY (`idcommune`) REFERENCES `commune` (`idCommune`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
--- Listage des données de la table piecedetache.vendeur : ~0 rows (environ)
+-- Listage des données de la table piecedetache.vendeur : ~2 rows (environ)
 INSERT INTO `vendeur` (`id_vendeur`, `nom`, `prenom`, `username`, `email`, `telephone`, `fax`, `password`, `type`, `specialite`, `registre_commerce`, `nif`, `article_imposition`, `idcommune`, `adresse`, `accepte_termes`) VALUES
-	(1, 'Test', 'Test', 'root', 'test@gmail.com', '0666161697', '+213 555161224', 'Tt123456', 'metier2', 'specialité1', NULL, '1234', NULL, 92, 'AZERTY', NULL);
+	(1, 'Test', 'Test', 'root', 'test@gmail.com', '0666161697', '+213 555161224', 'Tt123456', 'metier2', 'specialité1', NULL, '1234', NULL, 573, ' Cheraga, Alger, Algérie', NULL),
+	(2, 'Test22', 'Test', 'root22', 'test2@gmail.com', '0666161697', '+213 555161224', 'Test1234', 'metier2', 'specialité1', NULL, '1234', NULL, 591, 'Kouba,Alger', NULL);
 
 -- Listage de la structure de la table piecedetache. vendeur_horaire
 CREATE TABLE IF NOT EXISTS `vendeur_horaire` (
